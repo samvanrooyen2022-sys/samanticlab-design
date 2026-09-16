@@ -1,0 +1,12 @@
+samanticlab-design
+Copyright 2026 Sam van Rooyen / Samantic Lab
+
+This skill uses, unmodified, the "impeccable" engine binary (the `detect`
+command) by Paul Bakaus, https://github.com/pbakaus/impeccable, licensed
+under the Apache License, Version 2.0. A copy of that licence is in
+LICENSE-impeccable-scanner.txt. The scanner is fetched by
+scripts/get-scanner.sh and is not part of this skill's own source.
+
+The rules, checker (scripts/check.py) and helper skills are the work of
+Samantic Lab. Some rules were distilled from reading the impeccable and
+ui-ux-pro-max skills; wording and selection are our own.
