@@ -174,7 +174,7 @@
       return {
         li,
         src: img.currentSrc || img.src,
-        big: li.dataset.big,
+        big: li.dataset.big || img.currentSrc || img.src,
         alt: img.alt,
         cap: li.querySelector("figcaption span").textContent,
         skin: li.dataset.skin,
