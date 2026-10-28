@@ -1,0 +1,4 @@
+# Andrea Hurter site: static files, no build step.
+[build]
+  publish = "andrea-hurter/dist/site"
+  command = ""
