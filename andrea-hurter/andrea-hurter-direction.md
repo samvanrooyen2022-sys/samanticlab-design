@@ -1,26 +1,32 @@
-# Andrea Hurter — direction (v1)
+# Andrea Hurter — direction (v2)
 
-**Direction: Chameleon (verkleurmannetjie).** The site takes its colour from her photos. The gallery background turns into the colour of whichever photo is on screen. The menu has a strip you drag to re-skin the whole site, and the choice is remembered.
+**v2 replaces v1.** The client found the canola-yellow, heavy, blocky v1 too much. Andrea is a free spirit, modern and a go-getter, so the site should feel light and portfolio-like.
 
-**Scene:** someone on their phone after watching her TikTok, in bright canola-field daylight. Light site, not dark.
+**Colours: two, both taken from the hero photo.**
+- Sky blue `#B7CEE6` (the picnic cloth)
+- Naartjie orange `#E8742A`
 
-**Colour, committed:** canola `#F2C300` owns the hero, the intro line and the footer. Ink `#17140F`. Accents are lifted from the photos: naartjie `#EE7F1B`, Massey red `#C8321F`, sky cloth `#AFCBE6`, sunset purple `#9B6A93`, wheat green `#8FA83A`.
+White and ink `#1C1B19` are used only for reading text. Tints of the two colours (`#EEF4FA` wash, `#3D5F84` sky ink, `#A8470F` orange ink) cover small text and washes. No other colours.
 
 **Type:**
-- **Bricolage Grotesque** (display). Its width axis lets her name and the menu links stretch and squeeze, so the type changes shape like the chameleon.
-- **Hanken Grotesk** (text).
-- **Caveat** for her own words (diary, sign-off, painting titles).
+- **Instrument Serif** for headings. It is light and editorial, and its italic carries her voice.
+- **Hanken Grotesk** for body text.
 
-**Motion moment:** the gallery's colour shift. The footer name also stretches under your finger.
+**Pages:**
+- **Home:** hero, intro, roles, a gallery strip, doors to Kuns and Journal, and booking.
+- **Galery:** its own dark page, with a masonry wall, a swipe stack on phones and a lightbox.
+- **Kuns:** her art, sold by email enquiry.
+- **Journal:** her tips and diary in her own words.
 
-**First screen:** the goat photo, ANDREA HURTER huge beneath it on canola, and Book Andrea at thumb height.
+Every page uses different photos of her.
 
-**Kept against the rules, on purpose:**
-- The hero name is larger than the 6rem cap, because it *is* the hero.
-- "Is dit net ek?" is a painting title, not a question headline.
-- `overflow-x: clip` on `html`/`body` guards against sideways scroll.
+**Menu:** a full-screen sky-blue panel with large serif links and no images.
+
+**Footer:** orange, with "Okay, love you. Bye." and her name set huge. The letters lift and tilt around your finger.
+
+**Art:** Unsplash abstracts stand in for her canvases on the Kuns page and are marked as placeholders. Swap them for photos of her real paintings.
 
 **Open items:**
 - Photographer credit.
-- Photos, sizes and prices of the paintings.
-- Yoco/PayFast payment links.
+- Painting photos, sizes and prices.
+- Yoco/PayFast links.

@@ -18,26 +18,12 @@
     },
   };
 
-  /* ---------- skin: the chameleon ---------- */
-  const hexToRgb = (h) => {
-    const n = parseInt(h.replace("#", ""), 16);
-    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  };
-  const lum = ([r, g, b]) => {
-    const f = (c) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
-    return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
-  };
-  const onColour = (hex) => (lum(hexToRgb(hex)) > 0.2 ? "#17140f" : "#f4f5f1");
-
-  // el = a scoped surface (gallery, lightbox) or the whole page
-  function setSkin(hex, el = root) {
-    el.style.setProperty("--skin", hex);
-    el.style.setProperty("--on-skin", onColour(hex));
-  }
-
-  // the user's chosen skin from the menu re-colours every skin surface
-  const saved = store.get("ah-skin");
-  if (saved) setSkin(saved);
+  /* ---------- top bar turns solid once you leave the hero ---------- */
+  const bar = document.querySelector(".bar");
+  const solidAt = document.body.dataset.page === "home" ? () => window.innerHeight * 0.6 : () => 40;
+  const onScroll = () => bar?.classList.toggle("is-solid", window.scrollY > solidAt());
+  addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
 
   /* ---------- menu ---------- */
   const burger = document.querySelector(".burger");
@@ -65,9 +51,10 @@
     if (e.target.closest("a")) openMenu(false);
   });
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && root.hasAttribute("data-menu-open")) openMenu(false);
-    if (e.key === "Tab" && root.hasAttribute("data-menu-open")) {
-      const f = [...menu.querySelectorAll("a, button, [tabindex='0']"), burger];
+    if (!root.hasAttribute("data-menu-open")) return;
+    if (e.key === "Escape") openMenu(false);
+    if (e.key === "Tab") {
+      const f = [...menu.querySelectorAll("a, button"), burger];
       const i = f.indexOf(document.activeElement);
       if (e.shiftKey && i <= 0) {
         e.preventDefault();
@@ -78,73 +65,6 @@
       }
     }
   });
-
-  /* skin scrubber: drag a finger along the strip and the whole site changes colour */
-  const stops = ["#f2c300", "#ee7f1b", "#c8321f", "#9b6a93", "#afcbe6", "#8fa83a", "#17140f"];
-  const mix = (a, b, t) => {
-    const A = hexToRgb(a),
-      B = hexToRgb(b);
-    return (
-      "#" +
-      A.map((v, i) =>
-        Math.round(v + (B[i] - v) * t)
-          .toString(16)
-          .padStart(2, "0")
-      ).join("")
-    );
-  };
-  const colourAt = (p) => {
-    const x = Math.min(0.9999, Math.max(0, p)) * (stops.length - 1);
-    const i = Math.floor(x);
-    return mix(stops[i], stops[i + 1], x - i);
-  };
-  const strip = document.querySelector(".skinner__strip");
-  if (strip) {
-    const knob = strip.querySelector(".skinner__knob");
-    let p = parseFloat(store.get("ah-skin-p") ?? "0");
-    const paint = (np, persist) => {
-      p = Math.min(1, Math.max(0, np));
-      knob.style.setProperty("--x", p * 100 + "%");
-      strip.setAttribute("aria-valuenow", Math.round(p * 100));
-      strip.setAttribute("aria-valuetext", colourName(p));
-      const c = colourAt(p);
-      setSkin(c);
-      document.querySelectorAll("[data-skin-scope]").forEach((el) => setSkin(c, el));
-      if (persist) {
-        store.set("ah-skin", c);
-        store.set("ah-skin-p", String(p));
-      }
-    };
-    const names = ["Canola", "Naartjie", "Massey-rooi", "Sonsak-pers", "Lug", "Koring", "Ink"];
-    const colourName = (q) => names[Math.round(q * (names.length - 1))];
-    knob.style.setProperty("--x", p * 100 + "%");
-    strip.setAttribute("aria-valuetext", colourName(p));
-    const fromEvent = (e) => {
-      const r = strip.getBoundingClientRect();
-      return (e.clientX - r.left) / r.width;
-    };
-    let dragging = false;
-    strip.addEventListener("pointerdown", (e) => {
-      dragging = true;
-      strip.setPointerCapture(e.pointerId);
-      paint(fromEvent(e), false);
-    });
-    strip.addEventListener("pointermove", (e) => dragging && paint(fromEvent(e), false));
-    const end = () => {
-      if (!dragging) return;
-      dragging = false;
-      paint(p, true);
-    };
-    strip.addEventListener("pointerup", end);
-    strip.addEventListener("pointercancel", end);
-    strip.addEventListener("keydown", (e) => {
-      const step = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1 }[e.key];
-      if (step) {
-        e.preventDefault();
-        paint(p + step / (stops.length - 1) / 2, true);
-      }
-    });
-  }
 
   /* ---------- reveals ---------- */
   const rises = document.querySelectorAll(".rise");
@@ -157,50 +77,107 @@
             io.unobserve(en.target);
           }
         }),
-      { rootMargin: "0px 0px -10% 0px" }
+      { rootMargin: "0px 0px -8% 0px" }
     );
     rises.forEach((el) => io.observe(el));
   } else rises.forEach((el) => el.classList.add("is-in"));
 
-  /* ---------- gallery ---------- */
+  /* ---------- lightbox: shared by the gallery and any zoomable photo ---------- */
+  const lb = document.getElementById("lightbox");
+  let lbList = [];
+  let lbIndex = 0;
+  function showLb(i) {
+    lbIndex = (i + lbList.length) % lbList.length;
+    const d = lbList[lbIndex];
+    const img = lb.querySelector("img");
+    img.src = d.big;
+    img.alt = d.alt;
+    lb.querySelector("[data-lb-cap]").textContent = d.cap;
+    lb.querySelector("[data-lb-count]").textContent = lbList.length > 1 ? `${lbIndex + 1} van ${lbList.length}` : "";
+  }
+  function openLightbox(list, i) {
+    if (!lb) return;
+    lbList = list;
+    lb.toggleAttribute("data-single", list.length < 2);
+    showLb(i);
+    lb.showModal();
+  }
+  if (lb) {
+    lb.querySelector("[data-lb-next]").addEventListener("click", () => showLb(lbIndex + 1));
+    lb.querySelector("[data-lb-prev]").addEventListener("click", () => showLb(lbIndex - 1));
+    lb.querySelector("[data-lb-close]").addEventListener("click", () => lb.close());
+    lb.addEventListener("keydown", (e) => {
+      if (lbList.length < 2) return;
+      if (e.key === "ArrowRight") showLb(lbIndex + 1);
+      if (e.key === "ArrowLeft") showLb(lbIndex - 1);
+    });
+    lb.addEventListener("click", (e) => {
+      if (e.target === lb || e.target.classList.contains("lightbox__stage")) lb.close();
+    });
+    let lx = null;
+    const stage = lb.querySelector(".lightbox__stage");
+    stage.addEventListener("pointerdown", (e) => (lx = e.clientX));
+    stage.addEventListener("pointerup", (e) => {
+      if (lx === null || lbList.length < 2) return;
+      const d = e.clientX - lx;
+      lx = null;
+      if (Math.abs(d) > 50) showLb(lbIndex + (d < 0 ? 1 : -1));
+    });
+  }
+  document.querySelectorAll("img.zoomable").forEach((img) => {
+    img.tabIndex = 0;
+    img.setAttribute("role", "button");
+    const open = () =>
+      openLightbox([{ big: img.dataset.big || img.currentSrc || img.src, alt: img.alt, cap: img.dataset.cap || "" }], 0);
+    img.addEventListener("click", open);
+    img.addEventListener("keydown", (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), open()));
+  });
+
+  /* ---------- home: drag the photo strip with a mouse ---------- */
+  document.querySelectorAll(".strip__track").forEach((t) => {
+    let down = false,
+      sx = 0,
+      sl = 0;
+    t.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse") return;
+      down = true;
+      sx = e.clientX;
+      sl = t.scrollLeft;
+      t.classList.add("is-dragging");
+    });
+    addEventListener("pointermove", (e) => {
+      if (down) t.scrollLeft = sl - (e.clientX - sx);
+    });
+    addEventListener("pointerup", () => {
+      down = false;
+      t.classList.remove("is-dragging");
+    });
+  });
+
+  /* ---------- gallery page ---------- */
   const gallery = document.querySelector(".gallery");
   if (gallery) initGallery(gallery);
 
   function initGallery(g) {
-    const wall = g.querySelector(".wall");
-    const items = [...wall.querySelectorAll("li")];
+    const items = [...g.querySelectorAll(".wall li")];
     const data = items.map((li) => {
       const img = li.querySelector("img");
       return {
         li,
-        src: img.currentSrc || img.src,
         big: li.dataset.big || img.currentSrc || img.src,
         alt: img.alt,
-        cap: li.querySelector("figcaption span").textContent,
-        skin: li.dataset.skin,
+        cap: li.querySelector("figcaption").textContent,
         tags: li.dataset.tags.split(" "),
         wide: li.classList.contains("is-wide"),
       };
     });
     let visible = data.slice();
-    const userSkin = () => store.get("ah-skin");
+    let top = 0;
+    let cards = [];
+    const deck = g.querySelector(".stack__deck");
+    const capEl = g.querySelector("[data-stack-cap]");
+    const countEl = g.querySelector("[data-stack-count]");
 
-    // chameleon: the gallery takes the colour of whatever photo you're looking at
-    const skinFromPhoto = (d) => setSkin(d.skin, g);
-
-    if ("IntersectionObserver" in window) {
-      const io = new IntersectionObserver(
-        (entries) => {
-          if (g.dataset.view !== "wall") return;
-          const best = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-          if (best) skinFromPhoto(data.find((d) => d.li === best.target));
-        },
-        { rootMargin: "-40% 0px -40% 0px", threshold: [0, 0.5, 1] }
-      );
-      items.forEach((li) => io.observe(li));
-    }
-
-    /* view toggle */
     const viewBtns = g.querySelectorAll("[data-set-view]");
     const setView = (v) => {
       g.dataset.view = v;
@@ -209,8 +186,8 @@
     };
     viewBtns.forEach((b) => b.addEventListener("click", () => setView(b.dataset.setView)));
 
-    /* filters */
     const filterBtns = g.querySelectorAll("[data-filter]");
+    const live = g.querySelector("[data-live]");
     filterBtns.forEach((b) =>
       b.addEventListener("click", () => {
         const f = b.dataset.filter;
@@ -219,19 +196,11 @@
         data.forEach((d) => (d.li.hidden = !visible.includes(d)));
         top = 0;
         if (g.dataset.view === "stack") renderStack();
-        else if (visible[0]) skinFromPhoto(visible[0]);
-        const live = g.querySelector("[data-live]");
         if (live) live.textContent = `${visible.length} foto's`;
       })
     );
 
-    /* stack — flick through her photos like a deck of cards */
-    const deck = g.querySelector(".stack__deck");
-    const capEl = g.querySelector("[data-stack-cap]");
-    const countEl = g.querySelector("[data-stack-count]");
-    let top = 0;
-    let cards = [];
-
+    // stack: flick through her photos like a deck of cards
     function renderStack() {
       deck.innerHTML = "";
       cards = visible.map((d, i) => {
@@ -241,7 +210,6 @@
         im.src = d.big;
         im.alt = d.alt;
         im.loading = i < 3 ? "eager" : "lazy";
-        im.decoding = "async";
         im.draggable = false;
         f.append(im);
         deck.append(f);
@@ -257,28 +225,28 @@
         c.style.transform = "";
         c.setAttribute("aria-hidden", pos === 0 ? "false" : "true");
       });
-      const d = visible[top];
-      capEl.textContent = d.cap;
+      capEl.textContent = visible[top].cap;
       countEl.textContent = `${top + 1} van ${visible.length}`;
-      skinFromPhoto(d);
     }
-    const go = (dir) => {
-      if (!visible.length) return;
-      const card = cards[top];
-      if (!reduced && dir > 0) {
-        card.style.transform = `translate(${dir * 130}%, -6%) rotate(${dir * 22}deg)`;
+    const fling = (card, dir) => {
+      if (!reduced) {
+        card.style.transform = `translate(${dir * 140}%, -4%) rotate(${dir * 24}deg)`;
         card.style.opacity = "0";
         setTimeout(() => (card.style.opacity = ""), 420);
       }
-      top = (top + (dir > 0 ? 1 : -1) + visible.length) % visible.length;
+    };
+    const go = (dir) => {
+      if (!visible.length) return;
+      if (dir > 0) fling(cards[top], 1);
+      top = (top + dir + visible.length) % visible.length;
       setTimeout(position, reduced || dir < 0 ? 0 : 90);
     };
-    g.querySelector("[data-stack-next]")?.addEventListener("click", () => go(1));
-    g.querySelector("[data-stack-prev]")?.addEventListener("click", () => go(-1));
+    g.querySelector("[data-stack-next]").addEventListener("click", () => go(1));
+    g.querySelector("[data-stack-prev]").addEventListener("click", () => go(-1));
     deck.addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") go(1);
       if (e.key === "ArrowLeft") go(-1);
-      if (e.key === "Enter") openLightbox(visible[top]);
+      if (e.key === "Enter") openLightbox(visible, top);
     });
 
     let sx = 0,
@@ -300,9 +268,8 @@
     deck.addEventListener("pointermove", (e) => {
       if (!active) return;
       dx = e.clientX - sx;
-      const dy = e.clientY - sy;
       if (Math.abs(dx) > 6) moved = true;
-      active.style.transform = `translate(${dx}px, ${dy * 0.25}px) rotate(${dx / 14}deg)`;
+      active.style.transform = `translate(${dx}px, ${(e.clientY - sy) * 0.25}px) rotate(${dx / 14}deg)`;
     });
     const release = () => {
       if (!active) return;
@@ -310,60 +277,22 @@
       active = null;
       c.classList.remove("is-dragging");
       if (Math.abs(dx) > 90) {
-        c.style.transform = `translate(${Math.sign(dx) * 140}%, 0) rotate(${Math.sign(dx) * 24}deg)`;
-        c.style.opacity = "0";
-        setTimeout(() => (c.style.opacity = ""), 420);
+        fling(c, Math.sign(dx));
         top = (top + 1) % visible.length;
         setTimeout(position, 90);
       } else {
         c.style.transform = "";
-        if (!moved) openLightbox(visible[top]);
+        if (!moved) openLightbox(visible, top);
       }
     };
     deck.addEventListener("pointerup", release);
     deck.addEventListener("pointercancel", release);
 
-    /* lightbox */
-    const lb = document.getElementById("lightbox");
-    const lbImg = lb.querySelector("img");
-    const lbCap = lb.querySelector("[data-lb-cap]");
-    const lbCount = lb.querySelector("[data-lb-count]");
-    let lbIndex = 0;
-    function showLb(i) {
-      lbIndex = (i + visible.length) % visible.length;
-      const d = visible[lbIndex];
-      lbImg.src = d.big;
-      lbImg.alt = d.alt;
-      lbCap.textContent = d.cap;
-      lbCount.textContent = `${lbIndex + 1} van ${visible.length}`;
-      setSkin(d.skin, lb);
-    }
-    function openLightbox(d) {
-      showLb(visible.indexOf(d));
-      lb.showModal();
-    }
     items.forEach((li, i) =>
-      li.querySelector("button").addEventListener("click", () => openLightbox(data[i]))
+      li.querySelector("button").addEventListener("click", () => openLightbox(visible, visible.indexOf(data[i])))
     );
-    lb.querySelector("[data-lb-next]").addEventListener("click", () => showLb(lbIndex + 1));
-    lb.querySelector("[data-lb-prev]").addEventListener("click", () => showLb(lbIndex - 1));
-    lb.querySelector("[data-lb-close]").addEventListener("click", () => lb.close());
-    lb.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") showLb(lbIndex + 1);
-      if (e.key === "ArrowLeft") showLb(lbIndex - 1);
-    });
-    let lx = null;
-    const stage = lb.querySelector(".lightbox__stage");
-    stage.addEventListener("pointerdown", (e) => (lx = e.clientX));
-    stage.addEventListener("pointerup", (e) => {
-      if (lx === null) return;
-      const d = e.clientX - lx;
-      lx = null;
-      if (Math.abs(d) > 50) showLb(lbIndex + (d < 0 ? 1 : -1));
-    });
 
     setView(matchMedia("(min-width: 768px)").matches ? "wall" : "stack");
-    if (userSkin() && g.dataset.view === "wall") setSkin(userSkin(), g);
   }
 
   /* ---------- booking picker: builds the email for you ---------- */
@@ -387,12 +316,12 @@
     update();
   }
 
-  /* ---------- footer name: touch it and the letters stretch ---------- */
+  /* ---------- footer name: the letters float up around your finger ---------- */
   document.querySelectorAll(".bigname").forEach((el) => {
-    const letters = [...el.textContent.trim()];
-    el.setAttribute("aria-label", el.textContent.trim());
+    const text = el.textContent.trim();
+    el.setAttribute("aria-label", text);
     el.textContent = "";
-    const spans = letters.map((ch) => {
+    const spans = [...text].map((ch) => {
       const s = document.createElement("span");
       s.textContent = ch === " " ? " " : ch;
       s.setAttribute("aria-hidden", "true");
@@ -400,46 +329,47 @@
       return s;
     });
     const play = (x) => {
-      spans.forEach((s) => {
+      spans.forEach((s, i) => {
         const r = s.getBoundingClientRect();
-        const d = Math.abs(r.left + r.width / 2 - x) / window.innerWidth;
-        const k = Math.max(0, 1 - d * 5);
-        s.style.setProperty("--w", 75 + k * 25 + "%");
-        s.style.setProperty("--wg", Math.round(800 - k * 500));
-        s.classList.toggle("is-hot", k > 0.7);
+        const d = (r.left + r.width / 2 - x) / window.innerWidth;
+        const k = Math.max(0, 1 - Math.abs(d) * 6);
+        s.style.setProperty("--y", -k * 0.14 + "em");
+        s.style.setProperty("--rot", k * (i % 2 ? 7 : -7) + "deg");
+        s.classList.toggle("is-hot", k > 0.6);
       });
     };
     const calm = () =>
       spans.forEach((s) => {
-        s.style.removeProperty("--w");
-        s.style.removeProperty("--wg");
+        s.style.removeProperty("--y");
+        s.style.removeProperty("--rot");
         s.classList.remove("is-hot");
       });
     el.addEventListener("pointermove", (e) => play(e.clientX));
     el.addEventListener("pointerdown", (e) => play(e.clientX));
     el.addEventListener("pointerleave", calm);
-    el.addEventListener("pointerup", (e) => e.pointerType !== "mouse" && setTimeout(calm, 600));
-    // phones: the name breathes as it scrolls into view
+    el.addEventListener("pointerup", (e) => e.pointerType !== "mouse" && setTimeout(calm, 700));
+    // a wave runs through the name once when it scrolls into view
     if (!reduced && "IntersectionObserver" in window) {
-      new IntersectionObserver(
+      const io = new IntersectionObserver(
         ([en]) => {
-          if (en.isIntersecting) {
-            let x = 0;
-            const t = setInterval(() => {
-              play((x / 20) * window.innerWidth);
-              if (++x > 20) {
-                clearInterval(t);
-                calm();
-              }
-            }, 45);
-          }
+          if (!en.isIntersecting) return;
+          io.disconnect();
+          let x = 0;
+          const t = setInterval(() => {
+            play((x / 24) * window.innerWidth);
+            if (++x > 24) {
+              clearInterval(t);
+              calm();
+            }
+          }, 50);
         },
-        { threshold: 0.9 }
-      ).observe(el);
+        { threshold: 0.8 }
+      );
+      io.observe(el);
     }
   });
 
-  /* ---------- journal: years bars grow in ---------- */
+  /* ---------- journal ---------- */
   const bars = document.querySelectorAll(".years__bars .bar-line");
   if (bars.length && "IntersectionObserver" in window && !reduced) {
     bars.forEach((b) => b.style.setProperty("--grow", 0));
@@ -456,13 +386,11 @@
     bars.forEach((b) => io.observe(b));
   }
 
-  /* ---------- journal: copy a line ---------- */
   document.querySelectorAll("[data-copy]").forEach((b) =>
     b.addEventListener("click", async () => {
-      const text = b.dataset.copy;
       const label = b.querySelector(".copy");
       try {
-        await navigator.clipboard.writeText(text);
+        await navigator.clipboard.writeText(b.dataset.copy);
         label.textContent = "Gekopieer";
       } catch {
         label.textContent = "Kon nie kopieer nie";
@@ -475,7 +403,6 @@
     })
   );
 
-  /* ---------- journal: your page ---------- */
   const pad = document.getElementById("jou-bladsy");
   if (pad) {
     const promptEl = document.querySelector("[data-prompt]");
@@ -503,4 +430,11 @@
       pad.focus();
     });
   }
+
+  /* ---------- art stand-ins: if a hotlinked image fails, the tile keeps its colour ---------- */
+  document.querySelectorAll("img[data-art]").forEach((img) => {
+    const hide = () => (img.style.visibility = "hidden");
+    if (img.complete && !img.naturalWidth) hide();
+    img.addEventListener("error", hide);
+  });
 })();
