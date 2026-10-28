@@ -914,6 +914,7 @@ html[data-menu-open] {
 }
 .foot__photo {
   width: min(78%, 380px);
+  max-width: 100%;
   aspect-ratio: 3 / 4;
   transform: rotate(-3deg);
   box-shadow: var(--shadow);
@@ -986,12 +987,15 @@ html[data-menu-open] {
 }
 @media (min-width: 1024px) {
   .foot__top {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
     align-items: end;
     gap: var(--s24);
   }
   .foot {
     padding-bottom: var(--s8);
+  }
+  .foot__photo {
+    width: 100%;
   }
 }
 
