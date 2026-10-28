@@ -296,14 +296,11 @@ TIPS = [
 
 
 def tips():
-    out = []
-    for i, (q, p, en) in enumerate(TIPS):
-        out.append(f'    <li class="tip rise"><blockquote>{q}</blockquote><p>{p}</p><p class="en">{en}</p></li>')
-        if i == 1:
-            out.append(f'    <li class="rise">{img("peacock-silhouette", G["peacock-silhouette"][1], "photo tips__photo", "(min-width: 768px) 480px, 100vw", zoom=True, cap=G["peacock-silhouette"][0])}</li>')
-        if i == 3:
-            out.append(f'    <li class="rise">{img("peacock-lookback", G["peacock-lookback"][1], "photo tips__photo", "(min-width: 768px) 480px, 100vw", zoom=True, cap=G["peacock-lookback"][0])}</li>')
-    return "\n".join(out)
+    return "\n".join(f'    <li class="tip rise"><blockquote>{q}</blockquote><p>{p}</p><p class="en">{en}</p></li>' for q, p, en in TIPS)
+
+
+def tips_aside():
+    return "".join(img(n, G[n][1], sizes="(min-width: 1024px) 30vw, 50vw", zoom=True, cap=G[n][0]) for n in ("peacock-silhouette", "peacock-lookback"))
 
 
 LINES = [
@@ -354,6 +351,7 @@ journal = head("Journal — Andrea Hurter", "Hoe journal jy? Andrea Hurter se we
   <ul class="tips__list">
 {tips()}
   </ul>
+  <div class="tips__aside rise">{tips_aside()}</div>
 </section>
 
 <section class="diary" aria-labelledby="diary-h">
@@ -414,60 +412,65 @@ def mailto(subj):
 
 
 kuns = head("Kuns — Andrea Hurter", "Andrea Hurter se palette knife-skilderye op doek. Kies een, e-pos haar, en sy stuur die prys en betaalskakel.", "kuns") + f'''<main id="main">
-<header class="pagehead">
+<header class="khead">
   <div>
     <h1>Ku<em>ns</em></h1>
     <p class="lede">Palette knife op doek. Haar kuns het Andrea deur die trenches getrek en haar sane gehou. Nou is dit te koop.</p>
+    <div class="khead__cta">
+      <a class="btn" href="#te-koop">Sien wat te koop is {I["arrow-r"]}</a>
+      <a class="btn btn--line" href="{IG}" target="_blank" rel="noopener">{I["ig"]}Nuwe stukke op Instagram</a>
+    </div>
   </div>
-  {img("champagne-tower", G["champagne-tower"][1], "photo pagehead__img", "(min-width: 1024px) 38vw, 100vw", eager=True, zoom=True, cap=G["champagne-tower"][0])}
+  <div class="collage" aria-hidden="true">
+    <div class="collage__a">{img("champagne-tower", "", sizes="(min-width: 1024px) 32vw, 56vw", eager=True)}</div>
+    <div class="collage__b"><img src="{unsplash(ART[1], 600)}" width="600" height="750" alt="" data-art></div>
+    <div class="collage__c"><img src="{unsplash(ART[2], 600)}" width="600" height="750" alt="" data-art></div>
+  </div>
 </header>
 
 <section class="story" aria-labelledby="story-h">
-  <div>
-    <h2 class="section-h" id="story-h">Die <em>skoolskoen</em></h2>
-    <p class="big-serif rise" style="margin-top:32px;font-size:clamp(1.75rem,1.2rem + 2vw,3rem)">Wat? Julle wil <em>betaal</em> vir hierdie?</p>
-  </div>
-  <div class="prose lede">
-    <p>Op hoërskool het Andrea aansoek gedoen om kuns as vak te neem. Die toets was om 'n skoolskoen te teken. Haar skoolskoen was nie goed genoeg nie, en sy is nie aanvaar nie. Van toe af het sy geglo sy is nie kunstig nie.</p>
-    <p>Sy het aangehou verf, want dit het haar 'n plek gegee om uit te druk hoe sy voel. Sy het die skilderye sommer op haar Instagram stories gesit. Toe begin die boodskappe kom: as jy ooit jou kuns wil verkoop, let us know.</p>
-    <p>So hier is hulle. As niks verkoop nie, is dit okay, want sy het ten minste probeer. En as iets verkoop, is dit ook cool.</p>
+  <p class="story__quote rise">Wat? Julle wil <em>betaal</em> vir hierdie?</p>
+  <div class="story__body">
+    <h2 id="story-h">Die skoolskoen</h2>
+    <div class="story__cols lede" style="max-width:none">
+      <p>Op hoërskool het Andrea aansoek gedoen om kuns as vak te neem. Die toets was om 'n skoolskoen te teken. Haar skoolskoen was nie goed genoeg nie, en sy is nie aanvaar nie. Van toe af het sy geglo sy is nie kunstig nie.</p>
+      <p>Sy het aangehou verf, want dit het haar 'n plek gegee om uit te druk hoe sy voel. Sy het die skilderye sommer op haar Instagram stories gesit. Toe begin die boodskappe kom: as jy ooit jou kuns wil verkoop, let us know.</p>
+      <p>So hier is hulle. As niks verkoop nie, is dit okay, want sy het ten minste probeer. En as iets verkoop, is dit ook cool.</p>
+    </div>
   </div>
 </section>
 
-<section class="works" aria-labelledby="works-h">
-  <h2 class="section-h" id="works-h">Te <em>koop</em></h2>
+<section class="works" id="te-koop" aria-labelledby="works-h">
+  <div class="works__head">
+    <h2 class="section-h" id="works-h">Te <em>koop</em></h2>
+    <p>Elke skildery is 'n eenmalige stuk. Tik op 'n doek om dit groot te sien.</p>
+  </div>
   <ul class="works__list">
     <!-- Stand-in art from Unsplash: swap each <img data-art> for a photo of the real canvas,
          and point "Ek wil hierdie een hê" at a Yoco/PayFast link when there is one. -->
     <li class="work rise">
-      <div class="work__canvas"><img src="{unsplash(ART[1])}" width="1000" height="1250" alt="" loading="lazy" data-art><span class="work__tag">Plekhouer tot die foto van die doek kom</span><p>Instead of liking my stories we could just kiss like real people do.</p></div>
-      <div>
-        <h3>Instead of liking my <em>stories</em></h3>
-        <dl><dt>Medium</dt><dd>Palette knife op doek</dd><dt>Grootte</dt><dd>Vra vir Andrea</dd><dt>Prys</dt><dd>Op aanvraag</dd></dl>
-        <a class="btn" href="{mailto('Kuns: Instead of liking my stories')}">{I["mail"]}Ek wil hierdie een hê</a>
-      </div>
+      <div class="work__canvas"><img class="zoomable" src="{unsplash(ART[1])}" width="1000" height="1250" alt="Plekhouer-beeld vir die skildery Instead of liking my stories" loading="lazy" data-art data-cap="Instead of liking my stories (plekhouer)"><span class="work__tag">Plekhouer tot die foto van die doek kom</span><p>Instead of liking my stories we could just kiss like real people do.</p></div>
+      <h3>Instead of liking my <em>stories</em></h3>
+      <p class="work__meta">Palette knife op doek · Grootte en prys op aanvraag</p>
+      <a class="btn" href="{mailto('Kuns: Instead of liking my stories')}">{I["mail"]}Ek wil hierdie een hê</a>
     </li>
     <li class="work rise">
-      <div class="work__canvas" style="--c:var(--orange)"><img src="{unsplash(ART[2])}" width="1000" height="1250" alt="" loading="lazy" data-art><span class="work__tag">Plekhouer tot die foto van die doek kom</span><p>Is dit net ek? Of voel almal so?</p></div>
-      <div>
-        <h3>Is dit net <em>ek</em>?</h3>
-        <dl><dt>Medium</dt><dd>Palette knife op doek</dd><dt>Grootte</dt><dd>Vra vir Andrea</dd><dt>Prys</dt><dd>Op aanvraag</dd></dl>
-        <a class="btn" href="{mailto('Kuns: Is dit net ek?')}">{I["mail"]}Ek wil hierdie een hê</a>
-      </div>
+      <div class="work__canvas" style="--c:var(--orange)"><img class="zoomable" src="{unsplash(ART[2])}" width="1000" height="1250" alt="Plekhouer-beeld vir die skildery Is dit net ek?" loading="lazy" data-art data-cap="Is dit net ek? (plekhouer)"><span class="work__tag">Plekhouer tot die foto van die doek kom</span><p>Is dit net ek? Of voel almal so?</p></div>
+      <h3>Is dit net <em>ek</em>?</h3>
+      <p class="work__meta">Palette knife op doek · Grootte en prys op aanvraag</p>
+      <a class="btn" href="{mailto('Kuns: Is dit net ek?')}">{I["mail"]}Ek wil hierdie een hê</a>
     </li>
     <li class="work work--next rise">
       <div class="work__canvas"><p>Die volgende een is nog nat.</p></div>
-      <div>
-        <h3>Nuwe <em>skilderye</em></h3>
-        <p class="lede">Nuwe stukke verskyn eerste op haar Instagram stories, saam met die betaalskakel.</p>
-        <a class="btn btn--line" href="{IG}" target="_blank" rel="noopener">{I["ig"]}Volg @chameleonqueen_sa</a>
-      </div>
+      <h3>Nuwe <em>skilderye</em></h3>
+      <p class="work__meta">Nuwe stukke verskyn eerste op haar Instagram stories, saam met die betaalskakel.</p>
+      <a class="btn btn--line" href="{IG}" target="_blank" rel="noopener">{I["ig"]}Volg @chameleonqueen_sa</a>
     </li>
   </ul>
 </section>
 
 <section class="how" aria-labelledby="how-h">
-  <h2 class="section-h" id="how-h">So koop jy 'n skildery</h2>
+  <h2 class="section-h" id="how-h">So koop jy 'n <em>skildery</em></h2>
   <ol class="how__steps">
     <li><div>Tik op "Ek wil hierdie een hê".<span>Jou e-pos maak oop met die skildery se naam reeds ingevul.</span></div></li>
     <li><div>Andrea antwoord met die prys en 'n betaalskakel.<span>Sy bevestig ook die grootte en hoe die doek by jou uitkom.</span></div></li>
