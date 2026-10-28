@@ -1,0 +1,87 @@
+{
+ "goat-canola": {
+  "w": 1672,
+  "h": 941,
+  "skin": "#d8af35"
+ },
+ "poster-stukkies": {
+  "w": 1122,
+  "h": 1402,
+  "skin": "#f1c44f"
+ },
+ "champagne-tower": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#a98823"
+ },
+ "tractor": {
+  "w": 1440,
+  "h": 1919,
+  "skin": "#983329"
+ },
+ "laughing-bottle": {
+  "w": 1440,
+  "h": 1921,
+  "skin": "#dfc7a0"
+ },
+ "wheat-run": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#655925"
+ },
+ "spray": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#dcc4a3"
+ },
+ "ice-cream": {
+  "w": 1440,
+  "h": 1921,
+  "skin": "#dabd37"
+ },
+ "disco-raised": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#8d7e38"
+ },
+ "peacock-silhouette": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#eab382"
+ },
+ "disco-shoulder": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#ccb850"
+ },
+ "skirt-swirl": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#bca026"
+ },
+ "road-goat": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#1e1c1a"
+ },
+ "road-sunglasses": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#1e1c1a"
+ },
+ "peacock-lookback": {
+  "w": 1440,
+  "h": 1919,
+  "skin": "#ebc08a"
+ },
+ "wheat-laugh": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#81782d"
+ },
+ "sunglasses-picnic": {
+  "w": 1440,
+  "h": 1920,
+  "skin": "#cbb736"
+ }
+}
