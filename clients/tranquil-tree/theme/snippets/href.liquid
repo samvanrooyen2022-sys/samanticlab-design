@@ -2,25 +2,41 @@
   Turns a link setting into a URL. An empty link falls back to one of the
   site-wide links in Theme settings > Kiki's links.
   Usage: {% render 'href', url: block.settings.link, fallback: 'shift', text: 'Hi Kiki' %}
-  fallback: shift | quiz | whatsapp | retreats | links | account | bestsellers
+  fallback: shift | retreats (their pages) · shift-book | retreats-book (booking)
+            quiz | whatsapp | links | account | bestsellers
 {%- endcomment -%}
 {%- liquid
   assign key = url | default: fallback
   case key
     when 'custom', blank
       echo '#'
-    when 'shift', 'retreats'
-      if key == 'shift'
+    when 'shift'
+      comment
+        The Shift Consultation page: a Shopify page if one is set, else the theme's own page.
+      endcomment
+      if settings.shift_page != blank
+        echo settings.shift_page
+      else
+        echo routes.root_url | append: '?view=shift'
+      endif
+    when 'retreats'
+      if settings.retreats_page != blank
+        echo settings.retreats_page
+      else
+        echo routes.root_url | append: '?view=retreats'
+      endif
+    when 'shift-book', 'retreats-book'
+      if key == 'shift-book'
         assign own = settings.shift_url
         assign ask = "Hi Kiki, I'd like to book a Shift Consultation."
         assign subject = 'Booking a Shift Consultation'
       else
         assign own = settings.retreats_url
-        assign ask = "Hi Kiki, when is your next retreat?"
+        assign ask = "Hi Kiki, I'd like to hear about your next retreat."
         assign subject = 'Your next retreat'
       endif
       comment
-        No link set yet: ask Kiki on WhatsApp, or by email if there's no number either.
+        No booking link yet: ask Kiki on WhatsApp, or by email if there's no number either.
       endcomment
       if own != blank and own != '#'
         echo own
@@ -36,6 +52,8 @@
       echo settings.quiz_url | default: '#'
     when 'links'
       echo '/pages/links'
+    when 'dates'
+      echo '#dates'
     when 'account'
       echo routes.account_url
     when 'bestsellers'

@@ -42,11 +42,13 @@
     {%- if collection.description != blank -%}<div class="lede">{{ collection.description }}</div>{%- elsif s.fallback_text != blank -%}<p class="lede">{{ s.fallback_text }}</p>{%- endif -%}
   </div>
   {%- assign needs = section.blocks | where: 'type', 'need' -%}
-  {%- if needs.size > 0 -%}
+  {%- assign hide_needs = false -%}
+  {%- if collection.handle == 'all' and s.group_all -%}{%- assign hide_needs = true -%}{%- endif -%}
+  {%- if needs.size > 0 and hide_needs == false -%}
     <nav class="needs" aria-label="Shop by what you need">
       {%- for block in needs -%}
         {%- assign c = block.settings.collection -%}
-        {%- if c == blank and block.settings.search == blank -%}{%- continue -%}{%- endif -%}
+        {%- if c == blank and block.settings.search == blank and block.settings.group == blank -%}{%- continue -%}{%- endif -%}
         {%- if c != blank -%}
           <a class="need" href="{{ c.url }}"{% if c.handle == collection.handle %} aria-current="true"{% endif %} {{ block.shopify_attributes }}>
             <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
@@ -54,7 +56,7 @@
             <small>{% if c.products_count > 0 %}{{ c.products_count }} {{ c.products_count | pluralize: 'product', 'products' }}{% else %}Coming soon{% endif %}</small>
           </a>
         {%- else -%}
-          <a class="need" href="{% render 'search-url', q: block.settings.search, title: block.settings.title %}" {{ block.shopify_attributes }}>
+          <a class="need" href="{% if block.settings.group != blank %}{{ routes.all_products_collection_url }}#{{ block.settings.group }}{% else %}{% render 'search-url', q: block.settings.search, title: block.settings.title %}{% endif %}" {{ block.shopify_attributes }}>
             <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
             <b>{{ block.settings.title }}</b>
             <small>See products</small>
@@ -97,6 +99,92 @@
       </aside>
     {%- endif -%}
     <div>
+      {%- liquid
+        assign groups = section.blocks | where: 'type', 'group'
+        assign grouped = false
+        if s.group_all and collection.handle == 'all' and active == 0 and groups.size > 0 and collection.sort_by == blank
+          assign grouped = true
+        endif
+      -%}
+      {%- if grouped -%}
+        {%- comment -%}
+          Shop-all page, grouped by kind. Each product goes into the first group
+          whose words appear in its name (or, failing that, its product type);
+          the rest go last.
+          Change the groups and their words in the theme editor.
+        {%- endcomment -%}
+        {%- paginate collection.products by 250 -%}
+          {%- liquid
+            assign map = ''
+            for p in collection.products
+              assign hit = 'x'
+              comment
+                Name first; the product type only decides when the name matches no group.
+              endcomment
+              assign t_title = p.title | downcase
+              assign t_type = p.type | downcase
+              for pass in (1..2)
+                if pass == 1
+                  assign hay = t_title
+                else
+                  assign hay = t_type
+                endif
+                if hay == blank
+                  continue
+                endif
+                for g in groups
+                  assign gidx = forloop.index0
+                  assign words = g.settings.words | downcase | split: ','
+                  for w in words
+                    assign ww = w | strip
+                    if ww != blank and hay contains ww
+                      assign hit = gidx
+                      break
+                    endif
+                  endfor
+                  if hit != 'x'
+                    break
+                  endif
+                endfor
+                if hit != 'x'
+                  break
+                endif
+              endfor
+              assign map = map | append: hit | append: ','
+            endfor
+            assign slots = map | split: ','
+          -%}
+          <nav class="group-nav" aria-label="Jump to">
+            {%- for g in groups -%}
+              {%- assign gi = forloop.index0 | append: '' -%}
+              {%- if slots contains gi -%}<a href="#{{ g.settings.anchor | default: g.id }}">{{ g.settings.title }}</a>{%- endif -%}
+            {%- endfor -%}
+            {%- if slots contains 'x' -%}<a href="#more">{{ s.rest_title }}</a>{%- endif -%}
+          </nav>
+          {%- for g in groups -%}
+            {%- assign gi = forloop.index0 | append: '' -%}
+            {%- unless slots contains gi -%}{%- continue -%}{%- endunless -%}
+            <section class="pgroup" id="{{ g.settings.anchor | default: g.id }}" {{ g.shopify_attributes }}>
+              <div class="pgroup-head"><h2 class="h2">{{ g.settings.title }}</h2>{%- if g.settings.intro != blank -%}<p class="lede">{{ g.settings.intro }}</p>{%- endif -%}</div>
+              <div class="shop-grid">
+                {%- for p in collection.products -%}
+                  {%- if slots[forloop.index0] == gi -%}{% render 'product-card', product: p, badge: true, meta: s.show_meta, sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw' %}{%- endif -%}
+                {%- endfor -%}
+              </div>
+            </section>
+          {%- endfor -%}
+          {%- if slots contains 'x' -%}
+            <section class="pgroup" id="more">
+              <div class="pgroup-head"><h2 class="h2">{{ s.rest_title }}</h2></div>
+              <div class="shop-grid">
+                {%- for p in collection.products -%}
+                  {%- if slots[forloop.index0] == 'x' -%}{% render 'product-card', product: p, badge: true, meta: s.show_meta, sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw' %}{%- endif -%}
+                {%- endfor -%}
+              </div>
+            </section>
+          {%- endif -%}
+        {%- endpaginate -%}
+      {%- else -%}
       {%- paginate collection.products by s.per_page -%}
         <div class="shop-grid" data-shop-grid>
           {%- for p in collection.products -%}
@@ -128,6 +216,7 @@
           {%- endif -%}
         </div>
       {%- endpaginate -%}
+      {%- endif -%}
     </div>
   </div>
 
@@ -168,6 +257,9 @@
     { "type": "checkbox", "id": "show_meta", "label": "Show product type above the name", "default": false },
     { "type": "textarea", "id": "fallback_text", "label": "Intro when a collection has no description", "default": "Everything Kiki sells, in one place. Pick what you need below, or search for a product by name." },
     { "type": "range", "id": "promo_after", "label": "Show the promo box after product", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "header", "content": "Shop-all page groups" },
+    { "type": "checkbox", "id": "group_all", "label": "Group the shop-all page by kind", "default": true, "info": "Uses the Group blocks below, in order. Sorting or filtering shows one plain grid." },
+    { "type": "text", "id": "rest_title", "label": "Heading for products that fit no group", "default": "More from Kiki" },
     { "type": "text", "id": "help_heading", "label": "Help box heading", "default": "Can't find what you're looking for?" },
     { "type": "textarea", "id": "help_text", "label": "Help box text", "default": "Send Kiki a message and she'll tell you which product fits, or book a Shift Consultation for the bigger picture." }
   ],
@@ -175,11 +267,18 @@
     { "type": "need", "name": "Collection button", "settings": [
       { "type": "collection", "id": "collection", "label": "Collection" },
       { "type": "text", "id": "search", "label": "Search words when there's no collection", "info": "Use OR between words." },
+      { "type": "text", "id": "group", "label": "Or open a group on the shop page", "info": "Its anchor name, e.g. drinks. See the Group blocks on the shop page." },
       { "type": "text", "id": "title", "label": "Title", "info": "Empty uses the collection name." },
       { "type": "select", "id": "icon", "label": "Icon", "default": "leaf", "options": [
         { "value": "layout-grid", "label": "Grid" }, { "value": "star", "label": "Star" }, { "value": "zap", "label": "Bolt" }, { "value": "activity", "label": "Pulse" },
         { "value": "droplet", "label": "Drop" }, { "value": "brain", "label": "Brain" }, { "value": "heart", "label": "Heart" }, { "value": "leaf", "label": "Leaf" }
       ] }
+    ] },
+    { "type": "group", "name": "Group (shop-all page)", "settings": [
+      { "type": "text", "id": "title", "label": "Heading", "default": "Group" },
+      { "type": "text", "id": "anchor", "label": "Anchor name", "info": "Links elsewhere jump here with /collections/all#name." },
+      { "type": "textarea", "id": "intro", "label": "Short line" },
+      { "type": "textarea", "id": "words", "label": "Words that put a product here", "info": "Separated by commas. Checked against the product name first, then the product type. A product goes into the first group it matches." }
     ] },
     { "type": "promo", "name": "Promo box", "limit": 1, "settings": [
       { "type": "text", "id": "heading", "label": "Heading", "default": "Not sure where to start?" },

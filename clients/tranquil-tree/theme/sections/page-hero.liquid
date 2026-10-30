@@ -1,0 +1,67 @@
+{%- comment -%} Top of a page: photo beside the heading, short facts and up to two buttons. {%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="phero" aria-labelledby="h-{{ section.id }}">
+  <div class="wrap phero-in">
+    <div class="phero-media">
+      {%- if s.image != blank -%}
+        <div class="ph has-img">{{ s.image | image_url: width: 1600 | image_tag: class: 'pi', widths: '600,900,1200,1600', sizes: '(min-width: 1024px) 50vw, 100vw', loading: 'eager', fetchpriority: 'high', alt: s.image.alt | default: s.heading }}</div>
+      {%- else -%}
+        <div class="ph has-img"><img class="pi" src="{{ s.fallback_image | asset_url }}" alt="{{ s.heading | escape }}" width="2400" height="1352" style="object-position:{{ s.focus }}"></div>
+      {%- endif -%}
+    </div>
+    <div class="phero-copy">
+      {%- if s.eyebrow != blank -%}<p class="eyebrow">{{ s.eyebrow }}</p>{%- endif -%}
+      <h1 class="sig" id="h-{{ section.id }}"{% if settings.motion %} data-words data-words-now{% endif %}>{{ s.heading }}</h1>
+      {%- if s.text != blank -%}<p class="lede">{% render 'fill-text', text: s.text %}</p>{%- endif -%}
+      {%- if section.blocks.size > 0 -%}
+        <ul class="facts">
+          {%- for block in section.blocks -%}<li {{ block.shopify_attributes }}>{% render 'icon', name: block.settings.icon %}<span>{% render 'fill-text', text: block.settings.text %}</span></li>{%- endfor -%}
+        </ul>
+      {%- endif -%}
+      <div class="row-btns">
+        {%- if s.btn1 != blank -%}<a class="btn" href="{% render 'href', url: s.btn1_link, fallback: s.btn1_special %}">{{ s.btn1 }} {% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+        {%- if s.btn2 != blank -%}<a class="btn btn-line" href="{% render 'href', url: s.btn2_link, fallback: s.btn2_special %}">{% if s.btn2_special == 'whatsapp' %}{% render 'icon', name: 'whatsapp' %} {% endif %}{{ s.btn2 }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Page top",
+  "tag": "div",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "select", "id": "fallback_image", "label": "Photo while none is picked", "default": "hero.webp", "options": [
+      { "value": "hero.webp", "label": "Kiki with her products" }, { "value": "kiki.webp", "label": "Kiki close-up" }
+    ] },
+    { "type": "text", "id": "focus", "label": "Photo focus", "default": "28% 30%" },
+    { "type": "text", "id": "eyebrow", "label": "Small line above" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Page heading" },
+    { "type": "textarea", "id": "text", "label": "Text", "info": "Put anything Kiki still has to confirm in [square brackets]; it shows as a dashed tag." },
+    { "type": "text", "id": "btn1", "label": "Button 1" },
+    { "type": "url", "id": "btn1_link", "label": "Button 1 link" },
+    { "type": "select", "id": "btn1_special", "label": "If empty, button 1 goes to", "default": "shift-book", "options": [
+      { "value": "shift-book", "label": "Shift Consultation booking" }, { "value": "retreats-book", "label": "Retreats booking" },
+      { "value": "whatsapp", "label": "WhatsApp" }, { "value": "bestsellers", "label": "Best-sellers" }, { "value": "custom", "label": "Nothing" }
+    ] },
+    { "type": "text", "id": "btn2", "label": "Button 2" },
+    { "type": "url", "id": "btn2_link", "label": "Button 2 link" },
+    { "type": "select", "id": "btn2_special", "label": "If empty, button 2 goes to", "default": "whatsapp", "options": [
+      { "value": "whatsapp", "label": "WhatsApp" }, { "value": "shift-book", "label": "Shift Consultation booking" },
+      { "value": "retreats-book", "label": "Retreats booking" }, { "value": "bestsellers", "label": "Best-sellers" },
+      { "value": "dates", "label": "The dates further down" }, { "value": "custom", "label": "Nothing" }
+    ] }
+  ],
+  "blocks": [
+    { "type": "fact", "name": "Fact", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "check", "options": [
+        { "value": "check", "label": "Tick" }, { "value": "calendar-days", "label": "Calendar" }, { "value": "user", "label": "Person" },
+        { "value": "leaf", "label": "Leaf" }, { "value": "heart", "label": "Heart" }, { "value": "star", "label": "Star" }, { "value": "package", "label": "Package" }
+      ] },
+      { "type": "text", "id": "text", "label": "Text", "default": "Fact" }
+    ] }
+  ],
+  "presets": [{ "name": "Page top" }]
+}
+{% endschema %}

@@ -1,0 +1,42 @@
+<section class="sec" id="{{ section.settings.anchor | default: section.id }}" style="padding-top:{{ section.settings.pad_top }}px" aria-labelledby="h-{{ section.id }}">
+  <div class="wrap">
+    <div class="sec-head"><h2 class="h2" id="h-{{ section.id }}"{% if settings.motion %} data-words{% endif %}>{{ section.settings.heading }}</h2>
+      {%- if section.settings.intro != blank -%}<p class="lede">{% render 'fill-text', text: section.settings.intro %}</p>{%- endif -%}</div>
+    <div class="fgrid fgrid--{{ section.settings.cols }}">
+      {%- for block in section.blocks -%}
+        <div class="fcard{% if block.settings.style == 'green' %} green{% elsif block.settings.style == 'yellow' %} yellow{% endif %}" {{ block.shopify_attributes }}>
+          <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{% render 'fill-text', text: block.settings.text %}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cards",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Heading" },
+    { "type": "textarea", "id": "intro", "label": "Intro" },
+    { "type": "select", "id": "cols", "label": "Cards across on desktop", "default": "3", "options": [ { "value": "2", "label": "2" }, { "value": "3", "label": "3" }, { "value": "4", "label": "4" } ] },
+    { "type": "text", "id": "anchor", "label": "Anchor name", "info": "Buttons can jump here with #name." },
+    { "type": "range", "id": "pad_top", "label": "Space above", "min": 0, "max": 120, "step": 8, "unit": "px", "default": 56 }
+  ],
+  "blocks": [
+    { "type": "card", "name": "Card", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "leaf", "options": [
+        { "value": "leaf", "label": "Leaf" }, { "value": "heart", "label": "Heart" }, { "value": "zap", "label": "Bolt" }, { "value": "activity", "label": "Pulse" },
+        { "value": "droplet", "label": "Drop" }, { "value": "brain", "label": "Brain" }, { "value": "star", "label": "Star" }, { "value": "check", "label": "Tick" },
+        { "value": "calendar-days", "label": "Calendar" }, { "value": "user", "label": "Person" }, { "value": "package", "label": "Package" }, { "value": "repeat", "label": "Repeat" }
+      ] },
+      { "type": "text", "id": "title", "label": "Title", "default": "Title" },
+      { "type": "textarea", "id": "text", "label": "Text" },
+      { "type": "select", "id": "style", "label": "Colour", "default": "white", "options": [ { "value": "white", "label": "White" }, { "value": "green", "label": "Sage green" }, { "value": "yellow", "label": "Yellow" } ] }
+    ] }
+  ],
+  "presets": [{ "name": "Cards", "blocks": [ { "type": "card" }, { "type": "card" }, { "type": "card" } ] }]
+}
+{% endschema %}

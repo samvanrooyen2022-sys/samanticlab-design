@@ -65,7 +65,7 @@
               <ul>
                 {%- for l in section.blocks offset: start -%}
                   {%- if l.type == 'column' -%}{%- break -%}{%- endif -%}
-                  <li {{ l.shopify_attributes }}><a href="{%- if l.settings.link == blank and l.settings.search != blank -%}{% render 'search-url', q: l.settings.search, title: l.settings.label %}{%- else -%}{% render 'href', url: l.settings.link, fallback: l.settings.special %}{%- endif -%}">{{ l.settings.label }}</a></li>
+                  <li {{ l.shopify_attributes }}><a href="{%- if l.settings.link == blank and l.settings.group != blank -%}{{ routes.all_products_collection_url }}#{{ l.settings.group }}{%- elsif l.settings.link == blank and l.settings.search != blank -%}{% render 'search-url', q: l.settings.search, title: l.settings.label %}{%- else -%}{% render 'href', url: l.settings.link, fallback: l.settings.special %}{%- endif -%}">{{ l.settings.label }}</a></li>
                 {%- endfor -%}
               </ul>
             </details>
@@ -118,6 +118,7 @@
     { "type": "link", "name": "Link", "settings": [
       { "type": "text", "id": "label", "label": "Label", "default": "Link" },
       { "type": "url", "id": "link", "label": "Link" },
+      { "type": "text", "id": "group", "label": "Or open a group on the shop page", "info": "Its anchor name, e.g. drinks. See the Group blocks on the shop page." },
       { "type": "text", "id": "search", "label": "If the link is empty, search for", "info": "Opens a product search. Use OR between words." },
       { "type": "select", "id": "special", "label": "If the link is empty, use", "default": "custom", "options": [
         { "value": "custom", "label": "Nothing" },

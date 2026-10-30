@@ -58,7 +58,7 @@
           {%- for block in section.blocks -%}
             {%- if block.type == 'menu_collection' -%}
               {%- assign c = block.settings.collection -%}
-              {%- capture mc_url -%}{%- if c != blank -%}{{ c.url }}{%- elsif block.settings.search != blank -%}{% render 'search-url', q: block.settings.search, title: block.settings.title %}{%- else -%}#{%- endif -%}{%- endcapture -%}
+              {%- capture mc_url -%}{%- if c != blank -%}{{ c.url }}{%- elsif block.settings.group != blank -%}{{ routes.all_products_collection_url }}#{{ block.settings.group }}{%- elsif block.settings.search != blank -%}{% render 'search-url', q: block.settings.search, title: block.settings.title %}{%- else -%}#{%- endif -%}{%- endcapture -%}
               <a class="m-coll" href="{{ mc_url }}" {{ block.shopify_attributes }}>
                 <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
                 <span><b>{{ block.settings.title | default: c.title | default: 'Pick a collection' }}</b><small>{{ block.settings.sub }}</small></span>
@@ -200,6 +200,7 @@
       "name": "Menu collection",
       "settings": [
         { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "text", "id": "group", "label": "Or open a group on the shop page", "info": "Its anchor name, e.g. drinks. See the Group blocks on the shop page." },
         { "type": "text", "id": "search", "label": "Search words when there's no collection", "info": "Use OR between words, e.g. mushrooms OR shrooms." },
         { "type": "text", "id": "title", "label": "Title", "info": "Leave empty to use the collection name." },
         { "type": "text", "id": "sub", "label": "Small line" },

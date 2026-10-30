@@ -1,0 +1,188 @@
+{
+  "sections": {
+    "top": {
+      "type": "page-hero",
+      "blocks": {
+        "f1": {
+          "type": "fact",
+          "settings": {
+            "icon": "leaf",
+            "text": "[Where]"
+          }
+        },
+        "f2": {
+          "type": "fact",
+          "settings": {
+            "icon": "calendar-days",
+            "text": "[How many nights]"
+          }
+        },
+        "f3": {
+          "type": "fact",
+          "settings": {
+            "icon": "user",
+            "text": "[Group size]"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "eyebrow": "Tranquil Tree retreats",
+        "heading": "Come away for a few days",
+        "text": "A few days away with Kiki to rest, move, eat well and come home feeling more like yourself.",
+        "fallback_image": "hero.webp",
+        "focus": "28% 30%",
+        "btn1": "Ask about the next retreat",
+        "btn1_special": "retreats-book",
+        "btn2": "See the dates",
+        "btn2_special": "dates"
+      }
+    },
+    "inside": {
+      "type": "feature-grid",
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "icon": "leaf",
+            "title": "Rest",
+            "text": "Time to slow down, sleep well and be looked after for a few days.",
+            "style": "white"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "icon": "activity",
+            "title": "Move",
+            "text": "[Kiki's sessions: walks, yoga, workouts]",
+            "style": "white"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "icon": "heart",
+            "title": "Eat well",
+            "text": "[The food: who cooks, what kind of meals]",
+            "style": "white"
+          }
+        },
+        "c4": {
+          "type": "card",
+          "settings": {
+            "icon": "user",
+            "title": "Time with Kiki",
+            "text": "[Talks, one-on-one time, what she shares]",
+            "style": "green"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "settings": {
+        "heading": "What the days look like",
+        "cols": "4"
+      }
+    },
+    "dates": {
+      "type": "dates",
+      "blocks": {
+        "d1": {
+          "type": "date",
+          "settings": {
+            "date": "[Next retreat date]",
+            "place": "[Place]",
+            "note": "[Spaces left]"
+          }
+        },
+        "d2": {
+          "type": "date",
+          "settings": {
+            "date": "[Following date]",
+            "place": "[Place]",
+            "note": "[Spaces left]"
+          }
+        }
+      },
+      "block_order": [
+        "d1",
+        "d2"
+      ],
+      "settings": {
+        "heading": "Next dates",
+        "btn": "Ask about a place",
+        "anchor": "dates"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "q": "Who are the retreats for?",
+            "a": "[Kiki's answer]"
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "q": "What's included?",
+            "a": "[Stay, meals, sessions, transport]"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "q": "What does it cost?",
+            "a": "[Price, and deposit if any]"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "q": "How do I book a place?",
+            "a": "[How booking works]"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4"
+      ],
+      "settings": {
+        "heading": "Questions",
+        "pad_top": 56
+      }
+    },
+    "cta": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Want to come along?",
+        "text": "Send Kiki a message and she'll tell you about the next retreat.",
+        "btn": "Ask about the next retreat",
+        "special": "retreats-book",
+        "btn2": "",
+        "style": "yellow"
+      }
+    }
+  },
+  "order": [
+    "top",
+    "inside",
+    "dates",
+    "faq",
+    "cta"
+  ]
+}

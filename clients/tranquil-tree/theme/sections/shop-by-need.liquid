@@ -9,7 +9,7 @@
     <div class="travel-track" data-track>
       {%- for block in tiles -%}
         {%- assign c = block.settings.collection -%}
-        {%- capture tile_url -%}{%- if block.settings.link != blank -%}{{ block.settings.link }}{%- elsif c != blank -%}{{ c.url }}{%- elsif block.settings.search != blank -%}{% render 'search-url', q: block.settings.search, title: block.settings.title %}{%- else -%}#{%- endif -%}{%- endcapture -%}
+        {%- capture tile_url -%}{%- if block.settings.link != blank -%}{{ block.settings.link }}{%- elsif c != blank -%}{{ c.url }}{%- elsif block.settings.group != blank -%}{{ routes.all_products_collection_url }}#{{ block.settings.group }}{%- elsif block.settings.search != blank -%}{% render 'search-url', q: block.settings.search, title: block.settings.title %}{%- else -%}#{%- endif -%}{%- endcapture -%}
         <a class="tile" href="{{ tile_url }}" {{ block.shopify_attributes }}>
           {%- if block.settings.image != blank -%}
             <div class="ph has-img">{{ block.settings.image | image_url: width: 900 | image_tag: class: 'pi', widths: '400,600,900', sizes: '(min-width: 768px) 400px, 78vw', loading: 'lazy', alt: block.settings.title | default: c.title }}</div>
@@ -28,7 +28,7 @@
       {%- if more.size > 0 -%}
         <div class="tile-more">
           {%- for block in more -%}
-            <a href="{%- if block.settings.link != blank -%}{{ block.settings.link }}{%- elsif block.settings.search != blank -%}{% render 'search-url', q: block.settings.search, title: block.settings.label %}{%- else -%}{% render 'href', fallback: block.settings.special %}{%- endif -%}" {{ block.shopify_attributes }}>{{ block.settings.label }} {% render 'icon', name: 'arrow-right' %}</a>
+            <a href="{%- if block.settings.link != blank -%}{{ block.settings.link }}{%- elsif block.settings.group != blank -%}{{ routes.all_products_collection_url }}#{{ block.settings.group }}{%- elsif block.settings.search != blank -%}{% render 'search-url', q: block.settings.search, title: block.settings.label %}{%- else -%}{% render 'href', fallback: block.settings.special %}{%- endif -%}" {{ block.shopify_attributes }}>{{ block.settings.label }} {% render 'icon', name: 'arrow-right' %}</a>
           {%- endfor -%}
         </div>
       {%- endif -%}
@@ -50,7 +50,8 @@
       { "type": "image_picker", "id": "image", "label": "Photo", "info": "Empty uses the collection's own image." },
       { "type": "text", "id": "title", "label": "Title", "info": "Empty uses the collection name." },
       { "type": "textarea", "id": "text", "label": "Text" },
-      { "type": "text", "id": "search", "label": "Search words when there's no collection", "info": "The tile opens a product search for these. Use OR between words, e.g. collagen OR protein." },
+      { "type": "text", "id": "group", "label": "Or open a group on the shop page", "info": "Its anchor name, e.g. drinks. See the Group blocks on the shop page." },
+      { "type": "text", "id": "search", "label": "Search words", "info": "Finds the tile's photo when there's no collection or photo. Also where the tile goes if nothing above is set. Use OR between words." },
       { "type": "url", "id": "link", "label": "Link", "info": "Empty goes to the collection, or the search above." },
       { "type": "select", "id": "icon", "label": "Icon while there's no photo", "default": "leaf", "options": [
         { "value": "zap", "label": "Bolt" }, { "value": "activity", "label": "Pulse" }, { "value": "droplet", "label": "Drop" },
@@ -63,6 +64,7 @@
     { "type": "more_link", "name": "Extra link", "settings": [
       { "type": "text", "id": "label", "label": "Label", "default": "More" },
       { "type": "url", "id": "link", "label": "Link" },
+      { "type": "text", "id": "group", "label": "Or open a group on the shop page", "info": "Its anchor name, e.g. drinks. See the Group blocks on the shop page." },
       { "type": "text", "id": "search", "label": "If the link is empty, search for", "info": "Use OR between words." },
       { "type": "select", "id": "special", "label": "Or use", "default": "custom", "options": [
         { "value": "custom", "label": "Nothing" }, { "value": "bestsellers", "label": "Best-sellers" }

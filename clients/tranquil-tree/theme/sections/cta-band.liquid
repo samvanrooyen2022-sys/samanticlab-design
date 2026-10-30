@@ -1,0 +1,37 @@
+{%- assign s = section.settings -%}
+<section class="sec" style="padding-top:{{ s.pad_top }}px">
+  <div class="wrap">
+    <div class="cta-band{% if s.style == 'yellow' %} yellow{% endif %}">
+      <div>
+        <h2 class="h2">{{ s.heading }}</h2>
+        {%- if s.text != blank -%}<p>{% render 'fill-text', text: s.text %}</p>{%- endif -%}
+      </div>
+      <div class="row-btns">
+        {%- if s.btn != blank -%}<a class="btn {% if s.style == 'yellow' %}btn-ink{% else %}btn-y{% endif %}" href="{% render 'href', url: s.link, fallback: s.special %}">{{ s.btn }} {% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+        {%- if s.btn2 != blank and settings.whatsapp != blank -%}<a class="btn btn-w" href="{% render 'href', fallback: 'whatsapp' %}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %} {{ s.btn2 }}</a>{%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Call to action",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Ready when you are" },
+    { "type": "textarea", "id": "text", "label": "Text" },
+    { "type": "text", "id": "btn", "label": "Button", "default": "Book now" },
+    { "type": "url", "id": "link", "label": "Button link" },
+    { "type": "select", "id": "special", "label": "If empty, the button goes to", "default": "shift-book", "options": [
+      { "value": "shift-book", "label": "Shift Consultation booking" }, { "value": "retreats-book", "label": "Retreats booking" },
+      { "value": "shift", "label": "Shift Consultation page" }, { "value": "retreats", "label": "Retreats page" },
+      { "value": "whatsapp", "label": "WhatsApp" }, { "value": "bestsellers", "label": "Best-sellers" }
+    ] },
+    { "type": "text", "id": "btn2", "label": "Second button (WhatsApp)", "default": "Ask Kiki first", "info": "Shows when a WhatsApp number is set." },
+    { "type": "select", "id": "style", "label": "Colour", "default": "green", "options": [ { "value": "green", "label": "Sage green" }, { "value": "yellow", "label": "Yellow" } ] },
+    { "type": "range", "id": "pad_top", "label": "Space above", "min": 0, "max": 120, "step": 8, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Call to action" }]
+}
+{% endschema %}

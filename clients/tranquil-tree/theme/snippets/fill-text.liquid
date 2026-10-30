@@ -1,0 +1,6 @@
+{%- comment -%}
+  Prints text, turning anything in [square brackets] into a dashed "fill in" tag,
+  so the page shows clearly what Kiki still needs to give you.
+  Usage: {% render 'fill-text', text: block.settings.text %}
+{%- endcomment -%}
+{{- text | escape | replace: '[', '<span class="fill">' | replace: ']', '</span>' | newline_to_br -}}

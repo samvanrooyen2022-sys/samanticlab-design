@@ -1,0 +1,31 @@
+<section class="sec" style="padding-top:{{ section.settings.pad_top }}px" aria-labelledby="h-{{ section.id }}">
+  <div class="wrap faq">
+    <h2 class="h2" id="h-{{ section.id }}"{% if settings.motion %} data-words{% endif %}>{{ section.settings.heading }}</h2>
+    <div>
+      {%- for block in section.blocks -%}
+        <details class="acc"{% if forloop.first %} open{% endif %} {{ block.shopify_attributes }}>
+          <summary>{{ block.settings.q }} {% render 'icon', name: 'plus' %}</summary>
+          <div><p>{% render 'fill-text', text: block.settings.a %}</p></div>
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Questions",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Questions" },
+    { "type": "range", "id": "pad_top", "label": "Space above", "min": 0, "max": 120, "step": 8, "unit": "px", "default": 0 }
+  ],
+  "blocks": [
+    { "type": "qa", "name": "Question", "settings": [
+      { "type": "text", "id": "q", "label": "Question", "default": "Question?" },
+      { "type": "textarea", "id": "a", "label": "Answer", "default": "[Answer]" }
+    ] }
+  ],
+  "presets": [{ "name": "Questions", "blocks": [ { "type": "qa" }, { "type": "qa" } ] }]
+}
+{% endschema %}

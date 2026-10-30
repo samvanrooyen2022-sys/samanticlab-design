@@ -18,48 +18,6 @@
             "special": "bestsellers"
           }
         },
-        "l-energy": {
-          "type": "link",
-          "settings": {
-            "label": "Energy",
-            "search": "creatine OR bcaa OR protein OR recovery OR bar OR sport"
-          }
-        },
-        "l-body": {
-          "type": "link",
-          "settings": {
-            "label": "Body",
-            "search": "collagen OR superfood OR oat OR plant"
-          }
-        },
-        "l-skin": {
-          "type": "link",
-          "settings": {
-            "label": "Skin",
-            "search": "serum OR cleanser OR moisturiser OR derma OR skin"
-          }
-        },
-        "l-mindset": {
-          "type": "link",
-          "settings": {
-            "label": "Mindset",
-            "search": "mushrooms OR shrooms"
-          }
-        },
-        "l-family": {
-          "type": "link",
-          "settings": {
-            "label": "Family and kids",
-            "search": "kids OR family OR children"
-          }
-        },
-        "l-pets": {
-          "type": "link",
-          "settings": {
-            "label": "Pets",
-            "search": "pet OR pets"
-          }
-        },
         "col-kiki": {
           "type": "column",
           "settings": {
@@ -127,16 +85,58 @@
             "label": "WhatsApp us",
             "special": "whatsapp"
           }
+        },
+        "l-packs": {
+          "type": "link",
+          "settings": {
+            "label": "Skincare packages",
+            "group": "skincare-packages"
+          }
+        },
+        "l-skin": {
+          "type": "link",
+          "settings": {
+            "label": "Skincare",
+            "group": "skincare"
+          }
+        },
+        "l-drinks": {
+          "type": "link",
+          "settings": {
+            "label": "Drinks",
+            "group": "drinks"
+          }
+        },
+        "l-eat": {
+          "type": "link",
+          "settings": {
+            "label": "Things you eat",
+            "group": "eat"
+          }
+        },
+        "l-supps": {
+          "type": "link",
+          "settings": {
+            "label": "Supplements and powders",
+            "group": "supplements"
+          }
+        },
+        "l-pets": {
+          "type": "link",
+          "settings": {
+            "label": "For pets",
+            "group": "pets"
+          }
         }
       },
       "block_order": [
         "col-shop",
         "l-best",
-        "l-energy",
-        "l-body",
+        "l-packs",
         "l-skin",
-        "l-mindset",
-        "l-family",
+        "l-drinks",
+        "l-eat",
+        "l-supps",
         "l-pets",
         "col-kiki",
         "l-shift",

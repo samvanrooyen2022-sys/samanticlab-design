@@ -11,83 +11,128 @@
             "icon": "layout-grid"
           }
         },
-        "n-best": {
-          "type": "need",
+        "promo": {
+          "type": "promo",
+          "settings": {}
+        },
+        "g-pets": {
+          "type": "group",
           "settings": {
-            "collection": "bestsellers",
-            "icon": "star",
-            "title": "Bestsellers"
+            "title": "For pets",
+            "intro": "Something for the four-legged family too.",
+            "words": "pet, pets, dog, cat",
+            "anchor": "pets"
           }
         },
-        "n-energy": {
-          "type": "need",
+        "g-packs": {
+          "type": "group",
           "settings": {
-            "collection": "energy",
-            "icon": "zap",
-            "search": "creatine OR bcaa OR protein OR recovery OR bar OR sport",
-            "title": "Energy"
+            "title": "Skincare packages",
+            "intro": "Complete routines, put together for your skin type.",
+            "words": "skin package, skin pack, skincare package, skincare pack, skin bundle, skin kit, routine",
+            "anchor": "skincare-packages"
           }
         },
-        "n-body": {
+        "g-skin": {
+          "type": "group",
+          "settings": {
+            "title": "Skincare",
+            "intro": "Cleansers, serums, moisturisers and sun care. Not sure which one? Take the skin quiz.",
+            "words": "derma, serum, cleanser, moisturiser, moisturizer, toner, exfoliat, spf, sunscreen, polish, face cream, eye cream, clarify, luminex, skincare",
+            "anchor": "skincare"
+          }
+        },
+        "g-drinks": {
+          "type": "group",
+          "settings": {
+            "title": "Drinks",
+            "intro": "Ready to drink, or mix and go.",
+            "words": "drink, ready-to-drink, ready to drink, rtd, beverage, juice, latte, recovery, hydration, electrolyte, oat milk, milk",
+            "anchor": "drinks"
+          }
+        },
+        "g-eat": {
+          "type": "group",
+          "settings": {
+            "title": "Things you eat",
+            "intro": "Bars and snacks for busy days.",
+            "words": "bar, bars, real food, snack, cookie, biscuit, granola, muesli, spread, bites, food",
+            "anchor": "eat"
+          }
+        },
+        "g-supps": {
+          "type": "group",
+          "settings": {
+            "title": "Supplements and powders",
+            "intro": "Protein, creatine, collagen, mushrooms and daily powders.",
+            "words": "creatine, bcaa, protein, collagen, superfood, powder, mushroom, shroom, capsule, tablet, gumm, vitamin, magnesium, omega, greens",
+            "anchor": "supplements"
+          }
+        },
+        "n-packs": {
           "type": "need",
           "settings": {
-            "collection": "body",
-            "icon": "activity",
-            "search": "collagen OR superfood OR oat OR plant",
-            "title": "Body"
+            "title": "Skincare packages",
+            "group": "skincare-packages",
+            "icon": "star"
           }
         },
         "n-skin": {
           "type": "need",
           "settings": {
-            "collection": "skin",
-            "icon": "droplet",
-            "search": "serum OR cleanser OR moisturiser OR derma OR skin",
-            "title": "Skin"
+            "title": "Skincare",
+            "group": "skincare",
+            "icon": "droplet"
           }
         },
-        "n-mindset": {
+        "n-drinks": {
           "type": "need",
           "settings": {
-            "collection": "mindset",
-            "icon": "brain",
-            "search": "mushrooms OR shrooms",
-            "title": "Mindset"
+            "title": "Drinks",
+            "group": "drinks",
+            "icon": "zap"
           }
         },
-        "n-family": {
+        "n-eat": {
           "type": "need",
           "settings": {
-            "collection": "family",
-            "icon": "heart",
-            "search": "kids OR family OR children",
-            "title": "Family and kids"
+            "title": "Things you eat",
+            "group": "eat",
+            "icon": "heart"
+          }
+        },
+        "n-supps": {
+          "type": "need",
+          "settings": {
+            "title": "Supplements and powders",
+            "group": "supplements",
+            "icon": "activity"
           }
         },
         "n-pets": {
           "type": "need",
           "settings": {
-            "collection": "pets",
-            "icon": "leaf",
-            "search": "pet OR pets",
-            "title": "Pets"
+            "title": "For pets",
+            "group": "pets",
+            "icon": "leaf"
           }
-        },
-        "promo": {
-          "type": "promo",
-          "settings": {}
         }
       },
       "block_order": [
         "n-all",
-        "n-best",
-        "n-energy",
-        "n-body",
+        "n-packs",
         "n-skin",
-        "n-mindset",
-        "n-family",
+        "n-drinks",
+        "n-eat",
+        "n-supps",
         "n-pets",
-        "promo"
+        "promo",
+        "g-packs",
+        "g-skin",
+        "g-drinks",
+        "g-eat",
+        "g-supps",
+        "g-pets"
       ],
       "settings": {}
     }

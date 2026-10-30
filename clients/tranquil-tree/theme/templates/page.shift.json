@@ -1,0 +1,204 @@
+{
+  "sections": {
+    "top": {
+      "type": "page-hero",
+      "blocks": {
+        "f1": {
+          "type": "fact",
+          "settings": {
+            "icon": "calendar-days",
+            "text": "Sixty minutes with Kiki"
+          }
+        },
+        "f2": {
+          "type": "fact",
+          "settings": {
+            "icon": "user",
+            "text": "[Online, in person, or both]"
+          }
+        },
+        "f3": {
+          "type": "fact",
+          "settings": {
+            "icon": "star",
+            "text": "[Price]"
+          }
+        }
+      },
+      "block_order": [
+        "f1",
+        "f2",
+        "f3"
+      ],
+      "settings": {
+        "eyebrow": "With Kiki",
+        "heading": "Book a Shift Consultation",
+        "text": "Sixty minutes with Kiki to look at the bigger picture of how you feel: your energy, your body, your skin and your mindset, and what would help most.",
+        "fallback_image": "hero.webp",
+        "btn1": "Book my consultation",
+        "btn1_special": "shift-book",
+        "btn2": "Ask Kiki a question",
+        "btn2_special": "whatsapp"
+      }
+    },
+    "who": {
+      "type": "feature-grid",
+      "blocks": {
+        "c1": {
+          "type": "card",
+          "settings": {
+            "icon": "zap",
+            "title": "Your energy has dipped",
+            "text": "You're running on less than you used to and want to understand why, not just push through.",
+            "style": "white"
+          }
+        },
+        "c2": {
+          "type": "card",
+          "settings": {
+            "icon": "droplet",
+            "title": "Something has shifted",
+            "text": "Your body, skin, sleep or mood isn't where it was, and the usual fixes aren't working.",
+            "style": "white"
+          }
+        },
+        "c3": {
+          "type": "card",
+          "settings": {
+            "icon": "brain",
+            "title": "You're tired of guessing",
+            "text": "You'd like someone to look at the whole picture with you, and tell you what's worth trying first.",
+            "style": "green"
+          }
+        }
+      },
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "settings": {
+        "heading": "Is it for you?",
+        "cols": "3"
+      }
+    },
+    "how": {
+      "type": "steps",
+      "blocks": {
+        "s1": {
+          "type": "step",
+          "settings": {
+            "title": "Book your hour",
+            "text": "Pick a time that suits you. [Booking link from Kiki]"
+          }
+        },
+        "s2": {
+          "type": "step",
+          "settings": {
+            "title": "Tell Kiki a little about you",
+            "text": "[What Kiki asks before you meet, if anything]"
+          }
+        },
+        "s3": {
+          "type": "step",
+          "settings": {
+            "title": "Your Shift Consultation",
+            "text": "Sixty minutes to talk through how you feel, what's changed and what you want to change."
+          }
+        },
+        "s4": {
+          "type": "step",
+          "settings": {
+            "title": "Leave with a plan",
+            "text": "[What you leave with: notes, a routine, product suggestions]"
+          }
+        }
+      },
+      "block_order": [
+        "s1",
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "settings": {
+        "heading": "How it works"
+      }
+    },
+    "reviews": {
+      "type": "reviews",
+      "settings": {
+        "heading": "What women say after their consultation",
+        "pad_top": 56
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": {
+          "type": "qa",
+          "settings": {
+            "q": "How long is a Shift Consultation?",
+            "a": "Sixty minutes with Kiki."
+          }
+        },
+        "q2": {
+          "type": "qa",
+          "settings": {
+            "q": "Is it online or in person?",
+            "a": "[Online, in person, or both]"
+          }
+        },
+        "q3": {
+          "type": "qa",
+          "settings": {
+            "q": "What does it cost?",
+            "a": "[Price, and how to pay]"
+          }
+        },
+        "q4": {
+          "type": "qa",
+          "settings": {
+            "q": "Do I have to buy products afterwards?",
+            "a": "[Kiki's answer]"
+          }
+        },
+        "q5": {
+          "type": "qa",
+          "settings": {
+            "q": "Can I ask a question before I book?",
+            "a": "Yes. Send Kiki a WhatsApp and she'll get back to you."
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3",
+        "q4",
+        "q5"
+      ],
+      "settings": {
+        "heading": "Questions",
+        "pad_top": 56
+      }
+    },
+    "cta": {
+      "type": "cta-band",
+      "settings": {
+        "heading": "Ready when you are",
+        "text": "Book a time that suits you, or send Kiki a message first if you'd like to ask something.",
+        "btn": "Book my consultation",
+        "special": "shift-book",
+        "btn2": "Ask Kiki first"
+      }
+    }
+  },
+  "order": [
+    "top",
+    "who",
+    "how",
+    "reviews",
+    "faq",
+    "cta"
+  ]
+}

@@ -1,0 +1,30 @@
+<section class="sec" style="padding-top:{{ section.settings.pad_top }}px" aria-labelledby="h-{{ section.id }}">
+  <div class="wrap">
+    <div class="sec-head"><h2 class="h2" id="h-{{ section.id }}"{% if settings.motion %} data-words{% endif %}>{{ section.settings.heading }}</h2>
+      {%- if section.settings.intro != blank -%}<p class="lede">{% render 'fill-text', text: section.settings.intro %}</p>{%- endif -%}</div>
+    <ol class="steps">
+      {%- for block in section.blocks -%}
+        <li {{ block.shopify_attributes }}><span class="n">{{ forloop.index }}</span><div><h3>{{ block.settings.title }}</h3><p>{% render 'fill-text', text: block.settings.text %}</p></div></li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Steps",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How it works" },
+    { "type": "textarea", "id": "intro", "label": "Intro" },
+    { "type": "range", "id": "pad_top", "label": "Space above", "min": 0, "max": 120, "step": 8, "unit": "px", "default": 0 }
+  ],
+  "blocks": [
+    { "type": "step", "name": "Step", "settings": [
+      { "type": "text", "id": "title", "label": "Title", "default": "Step" },
+      { "type": "textarea", "id": "text", "label": "Text" }
+    ] }
+  ],
+  "presets": [{ "name": "Steps", "blocks": [ { "type": "step" }, { "type": "step" }, { "type": "step" } ] }]
+}
+{% endschema %}

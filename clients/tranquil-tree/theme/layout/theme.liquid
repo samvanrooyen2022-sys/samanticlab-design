@@ -8,7 +8,15 @@
   {%- if settings.favicon != blank -%}
     <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 64, height: 64 }}">
   {%- endif -%}
-  <title>{{ page_title }}{% if current_page != 1 %} – page {{ current_page }}{% endif %}{% unless page_title contains shop.name %} – {{ shop.name }}{% endunless %}</title>
+  {%- liquid
+    assign title = page_title
+    if template.name == 'index' and template.suffix == 'shift'
+      assign title = 'Book a Shift Consultation'
+    elsif template.name == 'index' and template.suffix == 'retreats'
+      assign title = 'Retreats'
+    endif
+  -%}
+  <title>{{ title }}{% if current_page != 1 %} – page {{ current_page }}{% endif %}{% unless title contains shop.name %} – {{ shop.name }}{% endunless %}</title>
   {%- if page_description %}<meta name="description" content="{{ page_description | escape }}">{% endif %}
   {% render 'meta-tags' %}
 

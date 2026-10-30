@@ -13,58 +13,58 @@
     "needs": {
       "type": "shop-by-need",
       "blocks": {
-        "t-energy": {
-          "type": "tile",
-          "settings": {
-            "collection": "energy",
-            "title": "Energy",
-            "icon": "zap",
-            "text": "Protein drinks, creatine, BCAAs and recovery drinks for training days.",
-            "search": "creatine OR bcaa OR protein OR recovery OR bar OR sport"
-          }
-        },
-        "t-body": {
-          "type": "tile",
-          "settings": {
-            "collection": "body",
-            "title": "Body",
-            "icon": "activity",
-            "text": "Collagen, plant protein and superfood powders for every day.",
-            "search": "collagen OR superfood OR oat OR plant"
-          }
-        },
         "t-skin": {
           "type": "tile",
           "settings": {
-            "collection": "skin",
-            "title": "Skin",
+            "title": "Skincare",
+            "group": "skincare",
             "icon": "droplet",
-            "text": "Cleansers, serums and moisturisers, and a quiz that helps you choose.",
-            "search": "serum OR cleanser OR moisturiser OR derma OR skin"
+            "search": "serum OR cleanser OR moisturiser OR derma",
+            "text": "Cleansers, serums, moisturisers and complete skin packages."
           }
         },
-        "t-mindset": {
+        "t-drinks": {
           "type": "tile",
           "settings": {
-            "collection": "mindset",
-            "title": "Mindset",
-            "icon": "brain",
-            "text": "The mushroom blends, Just Mushrooms and Mega Shrooms.",
-            "search": "mushrooms OR shrooms"
+            "title": "Drinks",
+            "group": "drinks",
+            "icon": "zap",
+            "search": "drink OR ready-to-drink OR recovery",
+            "text": "Protein and collagen drinks, recovery and hydration."
           }
         },
-        "m-family": {
+        "t-eat": {
+          "type": "tile",
+          "settings": {
+            "title": "Things you eat",
+            "group": "eat",
+            "icon": "heart",
+            "search": "bar OR bars OR snack OR food",
+            "text": "Bars and snacks for busy days."
+          }
+        },
+        "t-supps": {
+          "type": "tile",
+          "settings": {
+            "title": "Supplements",
+            "group": "supplements",
+            "icon": "activity",
+            "search": "creatine OR collagen OR mushrooms OR superfood",
+            "text": "Creatine, BCAAs, collagen, mushrooms and daily powders."
+          }
+        },
+        "m-packs": {
           "type": "more_link",
           "settings": {
-            "label": "Family and kids",
-            "search": "kids OR family OR children"
+            "label": "Skincare packages",
+            "group": "skincare-packages"
           }
         },
         "m-pets": {
           "type": "more_link",
           "settings": {
-            "label": "Pets",
-            "search": "pet OR pets"
+            "label": "For pets",
+            "group": "pets"
           }
         },
         "m-best": {
@@ -76,11 +76,11 @@
         }
       },
       "block_order": [
-        "t-energy",
-        "t-body",
         "t-skin",
-        "t-mindset",
-        "m-family",
+        "t-drinks",
+        "t-eat",
+        "t-supps",
+        "m-packs",
         "m-pets",
         "m-best"
       ],

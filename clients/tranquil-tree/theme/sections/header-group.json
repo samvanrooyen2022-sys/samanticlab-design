@@ -39,66 +39,6 @@
             "special": "retreats"
           }
         },
-        "mc-energy": {
-          "type": "menu_collection",
-          "settings": {
-            "collection": "energy",
-            "title": "Energy",
-            "sub": "Protein, creatine and recovery",
-            "icon": "zap",
-            "search": "creatine OR bcaa OR protein OR recovery OR bar OR sport"
-          }
-        },
-        "mc-body": {
-          "type": "menu_collection",
-          "settings": {
-            "collection": "body",
-            "title": "Body",
-            "sub": "Collagen and daily powders",
-            "icon": "activity",
-            "search": "collagen OR superfood OR oat OR plant"
-          }
-        },
-        "mc-skin": {
-          "type": "menu_collection",
-          "settings": {
-            "collection": "skin",
-            "title": "Skin",
-            "sub": "Cleansers, serums, moisturisers",
-            "icon": "droplet",
-            "search": "serum OR cleanser OR moisturiser OR derma OR skin"
-          }
-        },
-        "mc-mindset": {
-          "type": "menu_collection",
-          "settings": {
-            "collection": "mindset",
-            "title": "Mindset",
-            "sub": "The mushroom blends",
-            "icon": "brain",
-            "search": "mushrooms OR shrooms"
-          }
-        },
-        "mc-family": {
-          "type": "menu_collection",
-          "settings": {
-            "collection": "family",
-            "title": "Family and kids",
-            "sub": "Child-friendly products",
-            "icon": "heart",
-            "search": "kids OR family OR children"
-          }
-        },
-        "mc-pets": {
-          "type": "menu_collection",
-          "settings": {
-            "collection": "pets",
-            "title": "Pets",
-            "sub": "For the four-legged family",
-            "icon": "leaf",
-            "search": "pet OR pets"
-          }
-        },
         "ql-shift": {
           "type": "quick_link",
           "settings": {
@@ -131,6 +71,60 @@
             "sub": "Everything from her bio",
             "special": "links"
           }
+        },
+        "mc-packs": {
+          "type": "menu_collection",
+          "settings": {
+            "title": "Skincare packages",
+            "sub": "Complete routines",
+            "group": "skincare-packages",
+            "icon": "star"
+          }
+        },
+        "mc-skin": {
+          "type": "menu_collection",
+          "settings": {
+            "title": "Skincare",
+            "sub": "Cleansers, serums, moisturisers",
+            "group": "skincare",
+            "icon": "droplet"
+          }
+        },
+        "mc-drinks": {
+          "type": "menu_collection",
+          "settings": {
+            "title": "Drinks",
+            "sub": "Protein, collagen and recovery",
+            "group": "drinks",
+            "icon": "zap"
+          }
+        },
+        "mc-eat": {
+          "type": "menu_collection",
+          "settings": {
+            "title": "Things you eat",
+            "sub": "Bars and snacks",
+            "group": "eat",
+            "icon": "heart"
+          }
+        },
+        "mc-supps": {
+          "type": "menu_collection",
+          "settings": {
+            "title": "Supplements and powders",
+            "sub": "Creatine, collagen, mushrooms",
+            "group": "supplements",
+            "icon": "activity"
+          }
+        },
+        "mc-pets": {
+          "type": "menu_collection",
+          "settings": {
+            "title": "For pets",
+            "sub": "For the four-legged family",
+            "group": "pets",
+            "icon": "leaf"
+          }
         }
       },
       "block_order": [
@@ -138,11 +132,11 @@
         "nav-quiz",
         "nav-shift",
         "nav-retreats",
-        "mc-energy",
-        "mc-body",
+        "mc-packs",
         "mc-skin",
-        "mc-mindset",
-        "mc-family",
+        "mc-drinks",
+        "mc-eat",
+        "mc-supps",
         "mc-pets",
         "ql-shift",
         "ql-quiz",
