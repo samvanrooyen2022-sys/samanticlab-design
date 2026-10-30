@@ -9,12 +9,31 @@
   case key
     when 'custom', blank
       echo '#'
-    when 'shift'
-      echo settings.shift_url | default: '#'
+    when 'shift', 'retreats'
+      if key == 'shift'
+        assign own = settings.shift_url
+        assign ask = "Hi Kiki, I'd like to book a Shift Consultation."
+        assign subject = 'Booking a Shift Consultation'
+      else
+        assign own = settings.retreats_url
+        assign ask = "Hi Kiki, when is your next retreat?"
+        assign subject = 'Your next retreat'
+      endif
+      comment
+        No link set yet: ask Kiki on WhatsApp, or by email if there's no number either.
+      endcomment
+      if own != blank and own != '#'
+        echo own
+      elsif settings.whatsapp != blank
+        assign t = ask | url_encode
+        echo 'https://wa.me/' | append: settings.whatsapp | append: '?text=' | append: t
+      else
+        assign sub = subject | url_encode | replace: '+', '%20'
+        assign t = ask | url_encode | replace: '+', '%20'
+        echo 'mailto:' | append: shop.email | append: '?subject=' | append: sub | append: '&body=' | append: t
+      endif
     when 'quiz'
       echo settings.quiz_url | default: '#'
-    when 'retreats'
-      echo settings.retreats_url | default: '#'
     when 'links'
       echo '/pages/links'
     when 'account'

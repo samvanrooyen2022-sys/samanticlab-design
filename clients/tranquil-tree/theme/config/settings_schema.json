@@ -2,7 +2,7 @@
   {
     "name": "theme_info",
     "theme_name": "Tranquil Tree",
-    "theme_version": "1.1.0",
+    "theme_version": "1.1.1",
     "theme_author": "Samantic Lab",
     "theme_documentation_url": "https://samanticlab.netlify.app/",
     "theme_support_url": "https://samanticlab.netlify.app/"
@@ -45,9 +45,9 @@
     "settings": [
       { "type": "paragraph", "content": "Used by buttons across the site, so you set each one once." },
       { "type": "text", "id": "whatsapp", "label": "WhatsApp number", "info": "Country code and number, no spaces or +. Example: 27821234567" },
-      { "type": "text", "id": "shift_url", "label": "Shift Consultation booking link", "default": "#" },
+      { "type": "text", "id": "shift_url", "label": "Shift Consultation booking link", "info": "Empty: the button asks Kiki on WhatsApp (or by email if no number is set)." },
       { "type": "text", "id": "quiz_url", "label": "Skin quiz link", "default": "https://tranquiltreeskincare.netlify.app/" },
-      { "type": "text", "id": "retreats_url", "label": "Retreats link", "default": "#" },
+      { "type": "text", "id": "retreats_url", "label": "Retreats link", "info": "Empty: the button asks Kiki about the next retreat on WhatsApp (or by email)." },
       { "type": "text", "id": "facebook_url", "label": "Facebook link" },
       { "type": "text", "id": "instagram_url", "label": "Instagram link" }
     ]
