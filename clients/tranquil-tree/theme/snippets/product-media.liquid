@@ -1,0 +1,26 @@
+{%- comment -%}
+  A product photo in the same frame the design uses for photos.
+  Usage: {% render 'product-media', product: product, sizes: '50vw' %}
+  media: optional media or image (cart lines pass the variant image).
+{%- endcomment -%}
+{%- liquid
+  assign m = media | default: product.featured_media
+  assign src = m.preview_image | default: m
+  assign img_alt = m.alt | default: product.title | escape
+  assign img_sizes = sizes | default: '(min-width: 1024px) 25vw, 70vw'
+  assign img_loading = lazy_attr | default: 'lazy'
+  assign img_priority = priority | default: 'auto'
+-%}
+{%- if m -%}
+  <div class="ph has-img">
+    {{- src | image_url: width: 1200 | image_tag:
+      class: 'pi',
+      widths: '200,320,480,640,800,1000,1200',
+      sizes: img_sizes,
+      alt: img_alt,
+      loading: img_loading,
+      fetchpriority: img_priority -}}
+  </div>
+{%- else -%}
+  <div class="ph">{% render 'icon', name: 'image' %}{% if cap %}<span class="ph-cap">{{ cap }}</span>{% endif %}</div>
+{%- endif -%}

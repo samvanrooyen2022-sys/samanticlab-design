@@ -1,0 +1,12 @@
+{%- comment -%}
+  One plain sentence on what the product does for you.
+  Uses the product metafield custom.does when it is filled in,
+  otherwise the start of the product description.
+{%- endcomment -%}
+{%- liquid
+  assign does = product.metafields.custom.does.value | default: product.metafields.custom.does
+  if does == blank
+    assign does = product.description | strip_html | strip_newlines | truncatewords: words, '…'
+  endif
+  echo does | escape
+-%}

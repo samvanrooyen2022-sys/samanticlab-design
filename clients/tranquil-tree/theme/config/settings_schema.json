@@ -1,0 +1,85 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Tranquil Tree",
+    "theme_version": "1.0.0",
+    "theme_author": "Samantic Lab",
+    "theme_documentation_url": "https://samanticlab.netlify.app/",
+    "theme_support_url": "https://samanticlab.netlify.app/"
+  },
+  {
+    "name": "Colours",
+    "settings": [
+      { "type": "paragraph", "content": "Every colour on the site comes from these. Change one and it updates everywhere." },
+      { "type": "color", "id": "c_paper", "label": "Background", "default": "#FFFFFF" },
+      { "type": "color", "id": "c_mist", "label": "Soft fill (empty photos, inputs)", "default": "#F2F5F1" },
+      { "type": "color", "id": "c_tint", "label": "Hover tint", "default": "#EAF1E8" },
+      { "type": "color", "id": "c_green", "label": "Sage green (buttons, boxes)", "default": "#8EA88B" },
+      { "type": "color", "id": "c_green_2", "label": "Sage green hover", "default": "#7F9A7C" },
+      { "type": "color", "id": "c_yellow", "label": "Yellow (highlights, badges)", "default": "#FFD23F" },
+      { "type": "color", "id": "c_yellow_2", "label": "Yellow hover", "default": "#F5C21B" },
+      { "type": "color", "id": "c_ink", "label": "Text (dark green)", "default": "#1F2B1E" },
+      { "type": "color", "id": "c_mid", "label": "Small icons and hints", "default": "#566F53" },
+      { "type": "color", "id": "c_ink_soft", "label": "Soft text", "default": "#4A5A4E" }
+    ]
+  },
+  {
+    "name": "Fonts",
+    "settings": [
+      { "type": "paragraph", "content": "Any Google Font works. Paste its stylesheet link, then type each family name the way CSS needs it." },
+      { "type": "text", "id": "font_url", "label": "Google Fonts stylesheet link", "default": "https://fonts.googleapis.com/css2?family=Marcellus&family=Hanken+Grotesk:wght@500;600&family=Onest:wght@400;500;600&display=swap" },
+      { "type": "text", "id": "font_sig", "label": "Big headings", "default": "'Marcellus', Georgia, serif" },
+      { "type": "text", "id": "font_sub", "label": "Sub-headings, buttons, labels", "default": "'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif" },
+      { "type": "text", "id": "font_text", "label": "Body text, prices, product names", "default": "'Onest', 'Helvetica Neue', Arial, sans-serif" }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      { "type": "range", "id": "page_width", "label": "Page width", "min": 1000, "max": 1600, "step": 20, "unit": "px", "default": 1280 },
+      { "type": "range", "id": "radius", "label": "Corner roundness", "min": 0, "max": 32, "step": 1, "unit": "px", "default": 12 }
+    ]
+  },
+  {
+    "name": "Kiki's links",
+    "settings": [
+      { "type": "paragraph", "content": "Used by buttons across the site, so you set each one once." },
+      { "type": "text", "id": "whatsapp", "label": "WhatsApp number", "info": "Country code and number, no spaces or +. Example: 27821234567" },
+      { "type": "text", "id": "shift_url", "label": "Shift Consultation booking link", "default": "#" },
+      { "type": "text", "id": "quiz_url", "label": "Skin quiz link", "default": "https://tranquiltreeskincare.netlify.app/" },
+      { "type": "text", "id": "retreats_url", "label": "Retreats link", "default": "#" },
+      { "type": "text", "id": "facebook_url", "label": "Facebook link" },
+      { "type": "text", "id": "instagram_url", "label": "Instagram link" }
+    ]
+  },
+  {
+    "name": "Cart and delivery",
+    "settings": [
+      { "type": "text", "id": "delivery_line", "label": "Delivery line (cart, product page)", "default": "R120 delivery, at your door in 3–5 days" },
+      { "type": "text", "id": "cart_note", "label": "Small note under the cart total", "default": "R120 delivery is added at checkout." },
+      { "type": "number", "id": "free_delivery_from", "label": "Free delivery from (R)", "info": "Leave empty to hide the free-delivery progress bar. Only set this once free delivery is turned on in Shopify shipping settings." },
+      { "type": "text", "id": "free_delivery_text", "label": "Progress bar text", "default": "Add [amount] more for free delivery", "info": "[amount] is replaced with what is still needed." },
+      { "type": "text", "id": "free_delivery_done", "label": "Text once free delivery is reached", "default": "You've got free delivery." }
+    ]
+  },
+  {
+    "name": "Motion",
+    "settings": [
+      { "type": "checkbox", "id": "motion", "label": "Scroll effects and animations", "default": true, "info": "Pinned sections, growing photos and word-by-word headlines. Anyone whose phone asks for less motion always sees the still version." },
+      { "type": "checkbox", "id": "sticky_shop", "label": "Show the yellow Shop button on phones", "default": true }
+    ]
+  },
+  {
+    "name": "Sharing and icon",
+    "settings": [
+      { "type": "image_picker", "id": "share_image", "label": "Share image", "info": "Shown when a page without its own image is shared on WhatsApp or Facebook. 1200 × 630 works best." },
+      { "type": "image_picker", "id": "favicon", "label": "Browser tab icon", "info": "Square, at least 64 × 64." }
+    ]
+  },
+  {
+    "name": "Custom CSS",
+    "settings": [
+      { "type": "textarea", "id": "custom_css", "label": "Extra CSS for the whole site", "info": "Anything here loads after the theme's own CSS, so it wins." }
+    ]
+  }
+]

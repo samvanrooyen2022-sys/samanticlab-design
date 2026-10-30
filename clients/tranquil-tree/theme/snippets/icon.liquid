@@ -1,0 +1,9 @@
+{%- comment -%}
+  Lucide icon from the sprite. Usage: {% render 'icon', name: 'arrow-right' %}
+  Brand marks (facebook, instagram, whatsapp) use the filled style.
+{%- endcomment -%}
+{%- if name == 'facebook' or name == 'instagram' or name == 'whatsapp' -%}
+<svg class="i-brand" aria-hidden="true"><use href="#b-{{ name }}"/></svg>
+{%- elsif name != blank and name != 'none' -%}
+<svg class="i" aria-hidden="true"><use href="#i-{{ name }}"/></svg>
+{%- endif -%}

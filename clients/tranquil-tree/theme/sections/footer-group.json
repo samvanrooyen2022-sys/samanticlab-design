@@ -1,0 +1,32 @@
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "col-shop": { "type": "column", "settings": { "heading": "Shop" } },
+        "l-best": { "type": "link", "settings": { "label": "Bestsellers", "link": "shopify://collections/bestsellers" } },
+        "l-energy": { "type": "link", "settings": { "label": "Energy", "link": "shopify://collections/energy" } },
+        "l-body": { "type": "link", "settings": { "label": "Body", "link": "shopify://collections/body" } },
+        "l-skin": { "type": "link", "settings": { "label": "Skin", "link": "shopify://collections/skin" } },
+        "l-mindset": { "type": "link", "settings": { "label": "Mindset", "link": "shopify://collections/mindset" } },
+        "l-family": { "type": "link", "settings": { "label": "Family and kids", "link": "shopify://collections/family" } },
+        "l-pets": { "type": "link", "settings": { "label": "Pets", "link": "shopify://collections/pets" } },
+        "col-kiki": { "type": "column", "settings": { "heading": "With Kiki" } },
+        "l-shift": { "type": "link", "settings": { "label": "Shift Consultation", "special": "shift" } },
+        "l-quiz": { "type": "link", "settings": { "label": "Skin quiz", "special": "quiz" } },
+        "l-retreats": { "type": "link", "settings": { "label": "Retreats", "special": "retreats" } },
+        "l-links": { "type": "link", "settings": { "label": "Kiki's links", "special": "links" } },
+        "col-help": { "type": "column", "settings": { "heading": "Help" } },
+        "l-delivery": { "type": "link", "settings": { "label": "Delivery", "link": "shopify://policies/shipping-policy" } },
+        "l-returns": { "type": "link", "settings": { "label": "Returns", "link": "shopify://policies/refund-policy" } },
+        "l-orders": { "type": "link", "settings": { "label": "My orders", "special": "account" } },
+        "l-wa": { "type": "link", "settings": { "label": "WhatsApp us", "special": "whatsapp" } }
+      },
+      "block_order": ["col-shop","l-best","l-energy","l-body","l-skin","l-mindset","l-family","l-pets","col-kiki","l-shift","l-quiz","l-retreats","l-links","col-help","l-delivery","l-returns","l-orders","l-wa"],
+      "settings": {}
+    }
+  },
+  "order": ["footer"]
+}

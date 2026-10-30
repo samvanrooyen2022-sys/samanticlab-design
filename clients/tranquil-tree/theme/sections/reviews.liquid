@@ -1,0 +1,35 @@
+{%- comment -%} Real reviews. Add the Loox app block here in the theme editor. {%- endcomment -%}
+<section class="sec" style="padding-top:{{ section.settings.pad_top }}px" aria-labelledby="h-{{ section.id }}">
+  <div class="wrap">
+    {%- if section.settings.heading != blank -%}<div class="sec-head"><h2 class="h2" id="h-{{ section.id }}"{% if settings.motion %} data-words{% endif %}>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}{% render block %}
+          {%- when 'liquid' -%}<div {{ block.shopify_attributes }}>{{ block.settings.code }}</div>
+        {%- endcase -%}
+      {%- endfor -%}
+    {%- else -%}
+      <div class="loox">
+        <div class="stars">{% for i in (1..5) %}{% render 'icon', name: 'star' %}{% endfor %}</div>
+        <p>Add the Loox reviews block here: Customize, this section, Add block, Apps.</p>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Reviews",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What her customers say" },
+    { "type": "range", "id": "pad_top", "label": "Space above", "min": 0, "max": 120, "step": 8, "unit": "px", "default": 0 }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    { "type": "liquid", "name": "Custom code", "settings": [ { "type": "liquid", "id": "code", "label": "Code" } ] }
+  ],
+  "presets": [{ "name": "Reviews" }]
+}
+{% endschema %}

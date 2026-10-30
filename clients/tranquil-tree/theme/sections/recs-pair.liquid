@@ -1,0 +1,12 @@
+{%- comment -%} Fetched by theme.js for the cart's "Goes well with" row. Not placed on any page. {%- endcomment -%}
+{%- if recommendations.performed and recommendations.products_count > 0 -%}
+  {%- for p in recommendations.products limit: 3 -%}
+    {%- unless p.available -%}{%- continue -%}{%- endunless -%}
+    <div class="pair-row">
+      <a href="{{ p.url }}" aria-label="{{ p.title | escape }}">{% render 'product-media', product: p, sizes: '56px' %}</a>
+      <h3>{{ p.title }}<br>{% render 'price', product: p %}</h3>
+      {% render 'buy-button', product: p, class: 'btn btn-add', icon_only: true %}
+    </div>
+    {%- break -%}
+  {%- endfor -%}
+{%- endif -%}

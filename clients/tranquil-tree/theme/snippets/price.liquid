@@ -1,0 +1,9 @@
+{%- comment -%} Price, with "from" for products whose variants differ, and the old price when on sale. {%- endcomment -%}
+{%- liquid
+  assign v = variant | default: product.selected_or_first_available_variant
+-%}
+<span class="price" data-price>
+  {%- if variant == blank and product.price_varies -%}From {% endif -%}
+  {{- v.price | default: product.price | money -}}
+  {%- if v.compare_at_price > v.price -%} <s class="was">{{ v.compare_at_price | money }}</s>{%- endif -%}
+</span>

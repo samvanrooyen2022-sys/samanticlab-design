@@ -1,0 +1,33 @@
+{%- comment -%}
+  Turns a link setting into a URL. An empty link falls back to one of the
+  site-wide links in Theme settings > Kiki's links.
+  Usage: {% render 'href', url: block.settings.link, fallback: 'shift', text: 'Hi Kiki' %}
+  fallback: shift | quiz | whatsapp | retreats | links | account | bestsellers
+{%- endcomment -%}
+{%- liquid
+  assign key = url | default: fallback
+  case key
+    when 'custom', blank
+      echo '#'
+    when 'shift'
+      echo settings.shift_url | default: '#'
+    when 'quiz'
+      echo settings.quiz_url | default: '#'
+    when 'retreats'
+      echo settings.retreats_url | default: '#'
+    when 'links'
+      echo '/pages/links'
+    when 'account'
+      echo routes.account_url
+    when 'bestsellers'
+      echo routes.collections_url | append: '/bestsellers'
+    when 'whatsapp'
+      echo 'https://wa.me/' | append: settings.whatsapp
+      if text != blank
+        assign t = text | url_encode
+        echo '?text=' | append: t
+      endif
+    else
+      echo key | default: '#'
+  endcase
+-%}

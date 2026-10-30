@@ -1,0 +1,18 @@
+{
+  "layout": "links",
+  "sections": {
+    "main": {
+      "type": "links-page",
+      "blocks": {
+        "shift": { "type": "link", "settings": { "label": "Book a Shift Consultation", "special": "shift", "icon": "calendar-days", "main": true } },
+        "best": { "type": "link", "settings": { "label": "Shop bestsellers", "special": "bestsellers", "icon": "shopping-bag" } },
+        "quiz": { "type": "link", "settings": { "label": "Take the skin quiz", "special": "quiz", "icon": "droplet" } },
+        "retreats": { "type": "link", "settings": { "label": "Next retreat dates", "special": "retreats", "icon": "calendar-days" } },
+        "wa": { "type": "link", "settings": { "label": "WhatsApp us", "special": "whatsapp", "icon": "whatsapp" } }
+      },
+      "block_order": ["shift","best","quiz","retreats","wa"],
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

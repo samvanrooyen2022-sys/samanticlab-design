@@ -1,0 +1,29 @@
+{%- comment -%}
+  Fonts and colours from Theme settings. Change any of them in
+  Customize > Theme settings; theme.css reads these variables.
+{%- endcomment -%}
+{%- if settings.font_url != blank -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="{{ settings.font_url }}">
+{%- endif -%}
+<style>
+  :root{
+    --paper:{{ settings.c_paper }};
+    --mist:{{ settings.c_mist }};
+    --tint:{{ settings.c_tint }};
+    --yellow:{{ settings.c_yellow }};
+    --yellow-2:{{ settings.c_yellow_2 }};
+    --green:{{ settings.c_green }};
+    --green-2:{{ settings.c_green_2 }};
+    --green-ink:{{ settings.c_ink }};
+    --on-green:{{ settings.c_ink }};
+    --green-mid:{{ settings.c_mid }};
+    --ink-soft:{{ settings.c_ink_soft }};
+    --f-sig:{{ settings.font_sig }};
+    --f-sub:{{ settings.font_sub }};
+    --f-text:{{ settings.font_text }};
+    --max:{{ settings.page_width }}px;
+    --r-2:{{ settings.radius }}px;
+  }
+</style>

@@ -1,0 +1,12 @@
+{%- comment -%} Fetched by theme.js while typing in the search panel. {%- endcomment -%}
+{%- if predictive_search.performed -%}
+  {%- assign items = predictive_search.resources.products -%}
+  {%- if items.size > 0 -%}
+    {%- for p in items -%}
+      <a class="s-hit" href="{{ p.url }}">{% render 'product-media', product: p, sizes: '56px' %}<span><b>{{ p.title }}</b><small>{{ p.type | default: p.vendor }}</small></span>{% render 'price', product: p %}</a>
+    {%- endfor -%}
+    <a class="text-link" href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type=product">See all results {% render 'icon', name: 'arrow-right' %}</a>
+  {%- else -%}
+    <p class="search-empty">Nothing matches "{{ predictive_search.terms | escape }}". Try a shorter word, or WhatsApp Kiki and she will help.</p>
+  {%- endif -%}
+{%- endif -%}

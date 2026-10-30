@@ -1,0 +1,12 @@
+<div class="wrap acct">
+  <h1 class="sig">Create an account</h1>
+  <p class="lede">So reordering your favourites only takes a few taps.</p>
+  {%- form 'create_customer', class: 'acct-form' -%}
+    {{ form.errors | default_errors }}
+    <label>First name<input type="text" name="customer[first_name]" autocomplete="given-name"></label>
+    <label>Last name<input type="text" name="customer[last_name]" autocomplete="family-name"></label>
+    <label>Email<input type="email" name="customer[email]" autocomplete="email" required></label>
+    <label>Password<input type="password" name="customer[password]" autocomplete="new-password" required></label>
+    <button class="btn btn-wide" type="submit">Create my account</button>
+  {%- endform -%}
+</div>

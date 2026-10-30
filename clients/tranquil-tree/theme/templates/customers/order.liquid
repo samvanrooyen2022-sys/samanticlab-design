@@ -1,0 +1,16 @@
+<div class="wrap acct">
+  <p class="crumbs"><a href="{{ routes.account_url }}">Your account</a></p>
+  <h1 class="sig">Order {{ order.name }}</h1>
+  <p class="lede">{{ order.created_at | date: '%-d %B %Y' }} · {{ order.financial_status_label }} · {{ order.fulfillment_status_label }}</p>
+  {%- for li in order.line_items -%}
+    <div class="line-item">
+      {%- if li.image -%}<span class="ph has-img">{{ li.image | image_url: width: 160 | image_tag: class: 'pi' }}</span>{%- else -%}<span class="ph">{% render 'icon', name: 'image' %}</span>{%- endif -%}
+      <div><h3>{{ li.title }}</h3><small>× {{ li.quantity }}</small>{% if li.product %}<br><a class="text-link" href="{{ li.product.url }}">Order again</a>{% endif %}</div>
+      <span class="price">{{ li.final_line_price | money }}</span>
+    </div>
+  {%- endfor -%}
+  <div class="drawer-foot cart-foot">
+    <div class="row"><span>Delivery</span><span>{{ order.shipping_price | money }}</span></div>
+    <div class="row"><span>Total</span><span class="price">{{ order.total_price | money }}</span></div>
+  </div>
+</div>

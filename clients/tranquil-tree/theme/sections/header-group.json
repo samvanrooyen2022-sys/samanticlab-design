@@ -1,0 +1,32 @@
+{
+  "type": "header",
+  "name": "Header group",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "settings": { "text": "Delivered across South Africa in 3–5 days. R120 flat-rate delivery." }
+    },
+    "header": {
+      "type": "header",
+      "blocks": {
+        "nav-shop": { "type": "nav_link", "settings": { "label": "Shop", "opens_menu": true } },
+        "nav-quiz": { "type": "nav_link", "settings": { "label": "Skin quiz", "special": "quiz" } },
+        "nav-shift": { "type": "nav_link", "settings": { "label": "Shift Consultation", "special": "shift" } },
+        "nav-retreats": { "type": "nav_link", "settings": { "label": "Retreats", "special": "retreats" } },
+        "mc-energy": { "type": "menu_collection", "settings": { "collection": "energy", "title": "Energy", "sub": "Protein, creatine and recovery", "icon": "zap" } },
+        "mc-body": { "type": "menu_collection", "settings": { "collection": "body", "title": "Body", "sub": "Collagen and daily powders", "icon": "activity" } },
+        "mc-skin": { "type": "menu_collection", "settings": { "collection": "skin", "title": "Skin", "sub": "Cleansers, serums, moisturisers", "icon": "droplet" } },
+        "mc-mindset": { "type": "menu_collection", "settings": { "collection": "mindset", "title": "Mindset", "sub": "The mushroom blends", "icon": "brain" } },
+        "mc-family": { "type": "menu_collection", "settings": { "collection": "family", "title": "Family and kids", "sub": "Child-friendly products", "icon": "heart" } },
+        "mc-pets": { "type": "menu_collection", "settings": { "collection": "pets", "title": "Pets", "sub": "For the four-legged family", "icon": "leaf" } },
+        "ql-shift": { "type": "quick_link", "settings": { "label": "Shift Consultation", "sub": "Sixty minutes with Kiki", "special": "shift", "hot": true } },
+        "ql-quiz": { "type": "quick_link", "settings": { "label": "Skin quiz", "sub": "Find what suits your skin", "special": "quiz" } },
+        "ql-retreats": { "type": "quick_link", "settings": { "label": "Retreats", "sub": "Next dates", "special": "retreats" } },
+        "ql-links": { "type": "quick_link", "settings": { "label": "Kiki's links", "sub": "Everything from her bio", "special": "links" } }
+      },
+      "block_order": ["nav-shop","nav-quiz","nav-shift","nav-retreats","mc-energy","mc-body","mc-skin","mc-mindset","mc-family","mc-pets","ql-shift","ql-quiz","ql-retreats","ql-links"],
+      "settings": { "menu_best": "bestsellers" }
+    }
+  },
+  "order": ["announcement","header"]
+}

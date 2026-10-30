@@ -1,0 +1,27 @@
+{%- assign s = section.settings -%}
+<section class="sec" style="padding-top:{{ s.pad_top }}px" aria-labelledby="h-{{ section.id }}">
+  <div class="wrap">
+    <div class="reorder">
+      <div>
+        <h2 class="h2" id="h-{{ section.id }}">{{ s.heading }}</h2>
+        {%- if s.text != blank -%}<p>{{ s.text }}</p>{%- endif -%}
+      </div>
+      {%- if s.btn != blank -%}<a class="btn btn-ink" href="{% render 'href', url: s.link, fallback: 'account' %}">{% render 'icon', name: 'repeat' %} {{ s.btn }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Running low",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Running low on your favourite?" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Your past orders are saved in your account, so ordering the same thing again only takes a few taps." },
+    { "type": "text", "id": "btn", "label": "Button", "default": "See my past orders" },
+    { "type": "url", "id": "link", "label": "Button link", "info": "Empty goes to the customer account." },
+    { "type": "range", "id": "pad_top", "label": "Space above", "min": 0, "max": 120, "step": 8, "unit": "px", "default": 0 }
+  ],
+  "presets": [{ "name": "Running low" }]
+}
+{% endschema %}

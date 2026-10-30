@@ -1,0 +1,17 @@
+{%- comment -%} Anything at all: HTML, Liquid, embeds. For the things no other section does. {%- endcomment -%}
+<div class="{% if section.settings.contain %}wrap {% endif %}custom-sec" style="padding-block:{{ section.settings.pad }}px">
+  {{ section.settings.code }}
+</div>
+
+{% schema %}
+{
+  "name": "Custom code",
+  "tag": "section",
+  "settings": [
+    { "type": "liquid", "id": "code", "label": "HTML or Liquid" },
+    { "type": "checkbox", "id": "contain", "label": "Keep to page width", "default": true },
+    { "type": "range", "id": "pad", "label": "Space above and below", "min": 0, "max": 120, "step": 8, "unit": "px", "default": 40 }
+  ],
+  "presets": [{ "name": "Custom code" }]
+}
+{% endschema %}

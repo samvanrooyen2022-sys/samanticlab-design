@@ -1,0 +1,32 @@
+<div class="wrap">
+  <div class="shop-top">
+    <h1 class="sig">{% if search.performed %}Results for "{{ search.terms | escape }}"{% else %}Search{% endif %}</h1>
+    <form class="shop-find" action="{{ routes.search_url }}" method="get" role="search">
+      {% render 'icon', name: 'search' %}
+      <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search all products" aria-label="Search">
+      <input type="hidden" name="type" value="product">
+    </form>
+  </div>
+  <div style="padding-block:24px 72px">
+    {%- if search.performed -%}
+      {%- paginate search.results by 24 -%}
+        <p class="tb-count" style="margin-bottom:20px">{{ search.results_count }} {{ search.results_count | pluralize: 'result', 'results' }}</p>
+        <div class="shop-grid">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item, sizes: '(min-width: 768px) 33vw, 50vw' %}
+            {%- else -%}
+              <a class="card" href="{{ item.url }}"><b class="card-name">{{ item.title }}</b></a>
+            {%- endif -%}
+          {%- else -%}
+            <div class="shop-empty">{% render 'icon', name: 'search' %}<p>Nothing matches "{{ search.terms | escape }}". Try a shorter word, or WhatsApp Kiki and she will help.</p></div>
+          {%- endfor -%}
+        </div>
+        {%- if paginate.next -%}<div class="more"><a class="btn btn-line" href="{{ paginate.next.url }}">Next page</a></div>{%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</div>
+{% schema %}
+{ "name": "Search results", "settings": [] }
+{% endschema %}

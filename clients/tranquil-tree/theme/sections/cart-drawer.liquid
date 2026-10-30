@@ -1,0 +1,85 @@
+{%- comment -%}
+  Side cart. theme.js re-renders this section after every change
+  (Shopify Section Rendering API), so what you see is always the real cart.
+{%- endcomment -%}
+<div class="scrim" data-scrim></div>
+<aside class="drawer" id="cart" role="dialog" aria-modal="true" aria-label="Your cart" data-cart-drawer>
+  <div class="drawer-top">
+    <h2>{{ section.settings.heading }}</h2>
+    <button class="icon-btn" type="button" data-close aria-label="Close cart">{% render 'icon', name: 'x' %}</button>
+  </div>
+  <div data-cart-inner>
+    {%- liquid
+      assign free_from = settings.free_delivery_from | default: 0 | times: 100
+    -%}
+    {%- if free_from > 0 -%}
+      {%- assign left = free_from | minus: cart.total_price -%}
+      {%- assign left_money = left | money -%}
+      <div class="ship-bar ship-goal">
+        {% render 'icon', name: 'truck' %}
+        <span>{%- if left > 0 -%}{{ settings.free_delivery_text | replace: '[amount]', left_money }}{%- else -%}{{ settings.free_delivery_done }}{%- endif -%}</span>
+        {%- assign pct = cart.total_price | times: 100 | divided_by: free_from | at_most: 100 -%}
+        <i class="goal" style="--pct:{{ pct }}%"></i>
+      </div>
+    {%- elsif settings.delivery_line != blank -%}
+      <div class="ship-bar">{% render 'icon', name: 'truck' %} {{ settings.delivery_line }}</div>
+    {%- endif -%}
+
+    <div class="drawer-body">
+      {%- if cart.item_count == 0 -%}
+        <div class="drawer-empty">
+          {% render 'icon', name: 'shopping-bag' %}
+          <p>{{ section.settings.empty_text }}</p>
+          <a class="btn btn-line" href="{{ section.settings.empty_link | default: routes.all_products_collection_url }}">{{ section.settings.empty_button }}</a>
+        </div>
+      {%- else -%}
+        {%- for item in cart.items -%}
+          <div class="line-item">
+            <a href="{{ item.url }}" aria-label="{{ item.product.title | escape }}">{% render 'product-media', product: item.product, media: item.image, sizes: '72px' %}</a>
+            <div>
+              <h3><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+              {%- unless item.product.has_only_default_variant -%}<small class="variant">{{ item.variant.title }}</small>{%- endunless -%}
+              <div class="qty">
+                <button type="button" aria-label="One less" data-line="{{ forloop.index }}" data-qty-to="{{ item.quantity | minus: 1 }}">{% render 'icon', name: 'minus' %}</button>
+                <span>{{ item.quantity }}</span>
+                <button type="button" aria-label="One more" data-line="{{ forloop.index }}" data-qty-to="{{ item.quantity | plus: 1 }}">{% render 'icon', name: 'plus' %}</button>
+              </div>
+            </div>
+            <span class="price">{{ item.final_line_price | money }}</span>
+          </div>
+        {%- endfor -%}
+
+        {%- comment -%} One "goes well with" idea, from Shopify's own product recommendations. {%- endcomment -%}
+        {%- if section.settings.show_pair -%}
+          {%- assign last = cart.items.last.product -%}
+          <div class="drawer-pair" data-pair-for="{{ last.id }}" data-pair-title="Goes well with {{ last.title | escape }}" hidden></div>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    {%- if cart.item_count > 0 -%}
+      <div class="drawer-foot">
+        <div class="row"><span>Subtotal</span><span class="price">{{ cart.total_price | money }}</span></div>
+        {%- if settings.cart_note != blank -%}<small>{{ settings.cart_note }}</small>{%- endif -%}
+        <form action="{{ routes.cart_url }}" method="post">
+          <button class="btn btn-wide" type="submit" name="checkout">{{ section.settings.checkout }} {% render 'icon', name: 'arrow-right' %}</button>
+        </form>
+      </div>
+    {%- endif -%}
+  </div>
+  <span hidden data-cart-count>{{ cart.item_count }}</span>
+</aside>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Your cart" },
+    { "type": "text", "id": "checkout", "label": "Checkout button", "default": "Go to checkout" },
+    { "type": "checkbox", "id": "show_pair", "label": "Show one 'Goes well with' idea", "default": true },
+    { "type": "text", "id": "empty_text", "label": "Empty cart text", "default": "Your cart is empty for now." },
+    { "type": "text", "id": "empty_button", "label": "Empty cart button", "default": "Shop bestsellers" },
+    { "type": "url", "id": "empty_link", "label": "Empty cart button link" }
+  ]
+}
+{% endschema %}

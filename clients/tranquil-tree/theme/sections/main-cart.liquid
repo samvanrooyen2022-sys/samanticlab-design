@@ -1,0 +1,31 @@
+{%- comment -%} Full cart page, for anyone who lands on /cart. Most people use the side cart. {%- endcomment -%}
+<div class="wrap cart-page">
+  <div class="shop-top"><h1 class="sig">Your cart</h1></div>
+  {%- if cart.item_count == 0 -%}
+    <div class="drawer-empty">{% render 'icon', name: 'shopping-bag' %}<p>Your cart is empty for now.</p><a class="btn" href="{{ routes.all_products_collection_url }}">Start shopping</a></div>
+  {%- else -%}
+    <form action="{{ routes.cart_url }}" method="post">
+      {%- for item in cart.items -%}
+        <div class="line-item">
+          <a href="{{ item.url }}">{% render 'product-media', product: item.product, media: item.image, sizes: '72px' %}</a>
+          <div>
+            <h3><a href="{{ item.url }}">{{ item.product.title }}</a></h3>
+            {%- unless item.product.has_only_default_variant -%}<small class="variant">{{ item.variant.title }}</small>{%- endunless -%}
+            <label class="qty-field">Quantity <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric"></label>
+            <a class="text-link" href="{{ item.url_to_remove }}">Remove</a>
+          </div>
+          <span class="price">{{ item.final_line_price | money }}</span>
+        </div>
+      {%- endfor -%}
+      <div class="drawer-foot cart-foot">
+        <div class="row"><span>Subtotal</span><span class="price">{{ cart.total_price | money }}</span></div>
+        {%- if settings.cart_note != blank -%}<small>{{ settings.cart_note }}</small>{%- endif -%}
+        <button class="btn btn-line" type="submit" name="update">Update cart</button>
+        <button class="btn btn-wide" type="submit" name="checkout">Go to checkout {% render 'icon', name: 'arrow-right' %}</button>
+      </div>
+    </form>
+  {%- endif -%}
+</div>
+{% schema %}
+{ "name": "Cart", "settings": [] }
+{% endschema %}

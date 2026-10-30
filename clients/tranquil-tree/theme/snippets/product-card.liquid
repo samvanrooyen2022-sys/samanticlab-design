@@ -1,0 +1,32 @@
+{%- comment -%}
+  Product card. Photo, name, one line on what it does, price and add to cart.
+  Usage: {% render 'product-card', product: product, does: true, badge: false, meta: false %}
+{%- endcomment -%}
+{%- liquid
+  assign show_badge = false
+  if badge
+    for c in product.collections
+      if c.handle == 'bestsellers'
+        assign show_badge = true
+      endif
+    endfor
+  endif
+-%}
+<article class="card">
+  <a class="card-media" href="{{ product.url }}" aria-label="{{ product.title | escape }}">
+    {%- if show_badge -%}<span class="badge">{% render 'icon', name: 'star' %} Bestseller</span>{%- endif -%}
+    {%- if product.available == false -%}<span class="badge">Sold out</span>{%- endif -%}
+    {% render 'product-media', product: product, sizes: sizes %}
+  </a>
+  <div class="card-label">
+    {%- if meta -%}
+      <span class="card-meta">{{ product.type | default: product.vendor }}{% unless product.has_only_default_variant %} · {{ product.variants.size }} {{ product.options.first | downcase }}s{% endunless %}</span>
+    {%- endif -%}
+    <h3 class="card-name"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    {%- if does != false -%}<p class="card-does">{% render 'product-does', product: product, words: 16 %}</p>{%- endif -%}
+    <div class="card-row">
+      {% render 'price', product: product %}
+      {% render 'buy-button', product: product %}
+    </div>
+  </div>
+</article>

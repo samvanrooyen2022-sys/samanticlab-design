@@ -1,0 +1,17 @@
+{%- comment -%} Values theme.js needs. Kept small; everything else comes from the page. {%- endcomment -%}
+<script>
+  window.theme = {
+    routes: {
+      root: {{ routes.root_url | json }},
+      cartAdd: {{ routes.cart_add_url | json }},
+      cartChange: {{ routes.cart_change_url | json }},
+      cart: {{ routes.cart_url | json }},
+      search: {{ routes.search_url | json }},
+      predictive: {{ routes.predictive_search_url | json }},
+      recommendations: {{ routes.product_recommendations_url | json }}
+    },
+    moneyFormat: {{ shop.money_format | json }},
+    motion: {{ settings.motion | json }},
+    freeFrom: {{ settings.free_delivery_from | default: 0 | times: 100 | json }}
+  };
+</script>

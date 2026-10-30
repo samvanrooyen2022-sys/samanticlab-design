@@ -1,0 +1,59 @@
+{%- comment -%} Link-in-bio page. Assign the "links" template to a page called Links (/pages/links). {%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign p = s.product
+-%}
+<div class="links-in">
+  <div class="ph links-logo has-logo">
+    {%- if s.logo != blank -%}{{ s.logo | image_url: width: 240 | image_tag: alt: shop.name }}{%- else -%}<img src="{{ 'logo.webp' | asset_url }}" alt="{{ shop.name | escape }}" width="277" height="74">{%- endif -%}
+  </div>
+  <h1>{{ s.heading | default: shop.name }}</h1>
+  {%- if s.intro != blank -%}<p class="links-intro">{{ s.intro }}</p>{%- endif -%}
+  {%- if p != blank -%}
+    <div class="links-pick">
+      <a href="{{ p.url }}" aria-label="{{ p.title | escape }}">{% render 'product-media', product: p, sizes: '100px' %}</a>
+      <div>
+        <h2>{{ p.title }}</h2>
+        <small>{{ s.pick_label }}</small>
+        <div class="row">{% render 'price', product: p %}{% render 'buy-button', product: p, class: 'btn btn-ink' %}</div>
+      </div>
+    </div>
+  {%- endif -%}
+  {%- for block in section.blocks -%}
+    {%- assign b = block.settings -%}
+    <a class="link-btn{% if b.main %} main{% endif %}" href="{% render 'href', url: b.link, fallback: b.special %}"{% if b.special == 'whatsapp' or b.new_tab %} target="_blank" rel="noopener"{% endif %} {{ block.shopify_attributes }}>{% render 'icon', name: b.icon %} {{ b.label }} <span class="go">{% render 'icon', name: 'arrow-right' %}</span></a>
+  {%- endfor -%}
+  <p class="links-foot"><a href="{{ routes.root_url }}">{{ s.foot }}</a></p>
+</div>
+{% schema %}
+{
+  "name": "Links page",
+  "tag": "div",
+  "settings": [
+    { "type": "image_picker", "id": "logo", "label": "Round logo", "info": "Empty uses the logo that comes with the theme." },
+    { "type": "text", "id": "heading", "label": "Name", "default": "Tranquil Tree" },
+    { "type": "textarea", "id": "intro", "label": "One line", "default": "Kiki's energy, body, skin and mindset products, delivered across South Africa." },
+    { "type": "product", "id": "product", "label": "This week's product" },
+    { "type": "text", "id": "pick_label", "label": "Pick small line", "default": "Kiki's pick this week" },
+    { "type": "text", "id": "foot", "label": "Bottom link", "default": "Visit the full shop" }
+  ],
+  "blocks": [
+    { "type": "link", "name": "Button", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "Link" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "select", "id": "special", "label": "If the link is empty, use", "default": "custom", "options": [
+        { "value": "custom", "label": "Nothing" }, { "value": "shift", "label": "Shift Consultation link" }, { "value": "quiz", "label": "Skin quiz link" },
+        { "value": "retreats", "label": "Retreats link" }, { "value": "whatsapp", "label": "WhatsApp" }, { "value": "bestsellers", "label": "Bestsellers collection" }
+      ] },
+      { "type": "select", "id": "icon", "label": "Icon", "default": "arrow-right", "options": [
+        { "value": "calendar-days", "label": "Calendar" }, { "value": "shopping-bag", "label": "Bag" }, { "value": "droplet", "label": "Drop" },
+        { "value": "whatsapp", "label": "WhatsApp" }, { "value": "instagram", "label": "Instagram" }, { "value": "facebook", "label": "Facebook" },
+        { "value": "star", "label": "Star" }, { "value": "heart", "label": "Heart" }, { "value": "arrow-right", "label": "Arrow" }
+      ] },
+      { "type": "checkbox", "id": "main", "label": "Make this the green main button", "default": false },
+      { "type": "checkbox", "id": "new_tab", "label": "Open in a new tab", "default": false }
+    ] }
+  ],
+  "presets": [{ "name": "Links page" }]
+}
+{% endschema %}

@@ -1,0 +1,48 @@
+{%- comment -%} "Not sure where to start?": two (or more) paths side by side. {%- endcomment -%}
+<section class="sec" aria-labelledby="h-{{ section.id }}">
+  <div class="wrap">
+    {%- if section.settings.heading != blank -%}<div class="sec-head"><h2 class="h2" id="h-{{ section.id }}"{% if settings.motion %} data-words{% endif %}>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    <div class="paths">
+      {%- for block in section.blocks -%}
+        {%- assign b = block.settings -%}
+        <div class="path{% if b.style == 'dark' %} dark{% endif %}" {{ block.shopify_attributes }}>
+          <span class="ico">{% render 'icon', name: b.icon %}</span>
+          <h3>{{ b.heading }}</h3>
+          <p>{{ b.text }}</p>
+          {%- if b.btn != blank -%}<a class="btn{% if b.style == 'dark' %} btn-w{% endif %}" href="{% render 'href', url: b.link, fallback: b.special %}">{{ b.btn }} {% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Paths",
+  "tag": "div",
+  "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "Not sure where to start?" } ],
+  "blocks": [
+    { "type": "path", "name": "Path", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "droplet", "options": [
+        { "value": "droplet", "label": "Drop" }, { "value": "calendar-days", "label": "Calendar" }, { "value": "heart", "label": "Heart" },
+        { "value": "leaf", "label": "Leaf" }, { "value": "star", "label": "Star" }, { "value": "whatsapp", "label": "WhatsApp" }, { "value": "shopping-bag", "label": "Bag" }
+      ] },
+      { "type": "text", "id": "heading", "label": "Heading", "default": "Path" },
+      { "type": "textarea", "id": "text", "label": "Text" },
+      { "type": "text", "id": "btn", "label": "Button" },
+      { "type": "url", "id": "link", "label": "Button link" },
+      { "type": "select", "id": "special", "label": "If the link is empty, use", "default": "custom", "options": [
+        { "value": "custom", "label": "Nothing" }, { "value": "shift", "label": "Shift Consultation link" },
+        { "value": "quiz", "label": "Skin quiz link" }, { "value": "whatsapp", "label": "WhatsApp" }
+      ] },
+      { "type": "select", "id": "style", "label": "Style", "default": "light", "options": [
+        { "value": "light", "label": "White with green border" }, { "value": "dark", "label": "Sage green" }
+      ] }
+    ] }
+  ],
+  "presets": [{ "name": "Paths", "blocks": [
+    { "type": "path", "settings": { "icon": "droplet", "heading": "Take the skin quiz", "text": "Answer a few questions about your skin and get the products that suit it, so you are not guessing between serums.", "btn": "Start the skin quiz", "special": "quiz" } },
+    { "type": "path", "settings": { "icon": "calendar-days", "heading": "Book a Shift Consultation", "text": "Sixty minutes with Kiki to look at the bigger picture of how you feel, and what would help most.", "btn": "Book my consultation", "special": "shift", "style": "dark" } }
+  ] }]
+}
+{% endschema %}

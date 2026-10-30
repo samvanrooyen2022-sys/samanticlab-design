@@ -1,0 +1,38 @@
+<section class="sec rich" style="padding-block:{{ section.settings.pad }}px">
+  <div class="wrap rich-in rich--{{ section.settings.align }}">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when 'heading' -%}<h2 class="h2" {{ block.shopify_attributes }}{% if settings.motion %} data-words{% endif %}>{{ block.settings.text }}</h2>
+        {%- when 'text' -%}<div class="lede" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+        {%- when 'button' -%}<a class="btn{% if block.settings.style != 'green' %} btn-{{ block.settings.style }}{% endif %}" href="{% render 'href', url: block.settings.link, fallback: block.settings.special %}" {{ block.shopify_attributes }}>{{ block.settings.label }} {% render 'icon', name: 'arrow-right' %}</a>
+      {%- endcase -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Text",
+  "tag": "div",
+  "settings": [
+    { "type": "select", "id": "align", "label": "Alignment", "default": "left", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Centre" } ] },
+    { "type": "range", "id": "pad", "label": "Space above and below", "min": 0, "max": 120, "step": 8, "unit": "px", "default": 56 }
+  ],
+  "blocks": [
+    { "type": "heading", "name": "Heading", "settings": [ { "type": "text", "id": "text", "label": "Heading", "default": "Heading" } ] },
+    { "type": "text", "name": "Text", "settings": [ { "type": "richtext", "id": "text", "label": "Text", "default": "<p>Write something in Kiki's voice.</p>" } ] },
+    { "type": "button", "name": "Button", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "Shop now" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "select", "id": "special", "label": "If the link is empty, use", "default": "custom", "options": [
+        { "value": "custom", "label": "Nothing" }, { "value": "shift", "label": "Shift Consultation link" },
+        { "value": "quiz", "label": "Skin quiz link" }, { "value": "whatsapp", "label": "WhatsApp" }
+      ] },
+      { "type": "select", "id": "style", "label": "Style", "default": "green", "options": [
+        { "value": "green", "label": "Sage green" }, { "value": "y", "label": "Yellow" }, { "value": "ink", "label": "Dark" }, { "value": "line", "label": "Outline" }
+      ] }
+    ] }
+  ],
+  "presets": [{ "name": "Text", "blocks": [ { "type": "heading" }, { "type": "text" } ] }]
+}
+{% endschema %}

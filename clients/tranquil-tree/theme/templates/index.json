@@ -1,0 +1,78 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {}
+    },
+    "bestsellers": {
+      "type": "featured-collection",
+      "settings": { "collection": "bestsellers" }
+    },
+    "needs": {
+      "type": "shop-by-need",
+      "blocks": {
+        "t-energy": { "type": "tile", "settings": { "collection": "energy", "title": "Energy", "icon": "zap", "text": "Protein drinks, creatine, BCAAs and recovery drinks for training days." } },
+        "t-body": { "type": "tile", "settings": { "collection": "body", "title": "Body", "icon": "activity", "text": "Collagen, plant protein and superfood powders for every day." } },
+        "t-skin": { "type": "tile", "settings": { "collection": "skin", "title": "Skin", "icon": "droplet", "text": "Cleansers, serums and moisturisers, and a quiz that helps you choose." } },
+        "t-mindset": { "type": "tile", "settings": { "collection": "mindset", "title": "Mindset", "icon": "brain", "text": "The mushroom blends, Just Mushrooms and Mega Shrooms." } },
+        "m-family": { "type": "more_link", "settings": { "label": "Family and kids", "link": "shopify://collections/family" } },
+        "m-pets": { "type": "more_link", "settings": { "label": "Pets", "link": "shopify://collections/pets" } },
+        "m-best": { "type": "more_link", "settings": { "label": "Bestsellers", "link": "shopify://collections/bestsellers" } }
+      },
+      "block_order": ["t-energy","t-body","t-skin","t-mindset","m-family","m-pets","m-best"],
+      "settings": {}
+    },
+    "week": {
+      "type": "weekly-pick",
+      "settings": {}
+    },
+    "story": {
+      "type": "story",
+      "blocks": {
+        "l1": { "type": "line", "settings": { "text": "Where she was when it began." } },
+        "l2": { "type": "line", "settings": { "text": "The first product that changed something for her." } },
+        "l3": { "type": "line", "settings": { "text": "Why she started sharing it with friends." } },
+        "l4": { "type": "line", "settings": { "text": "How Tranquil Tree grew from there." } },
+        "l5": { "type": "line", "settings": { "text": "What she wants for the women who buy from her." } }
+      },
+      "block_order": ["l1","l2","l3","l4","l5"],
+      "settings": {}
+    },
+    "paths": {
+      "type": "paths",
+      "blocks": {
+        "quiz": { "type": "path", "settings": { "icon": "droplet", "heading": "Take the skin quiz", "text": "Answer a few questions about your skin and get the products that suit it, so you are not guessing between serums.", "btn": "Start the skin quiz", "special": "quiz", "style": "light" } },
+        "shift": { "type": "path", "settings": { "icon": "calendar-days", "heading": "Book a Shift Consultation", "text": "Sixty minutes with Kiki to look at the bigger picture of how you feel, and what would help most.", "btn": "Book my consultation", "special": "shift", "style": "dark" } }
+      },
+      "block_order": ["quiz","shift"],
+      "settings": {}
+    },
+    "reviews": {
+      "type": "reviews",
+      "settings": {}
+    },
+    "reorder": {
+      "type": "reorder",
+      "settings": {}
+    },
+    "retreats": {
+      "type": "retreats",
+      "blocks": {
+        "d1": { "type": "date", "settings": { "label": "Next retreat", "date": "Date to be announced" } }
+      },
+      "block_order": ["d1"],
+      "settings": {}
+    },
+    "trust": {
+      "type": "trust-strip",
+      "blocks": {
+        "i1": { "type": "item", "settings": { "icon": "truck", "title": "Delivered to your door", "text": "Across South Africa in 3–5 days, R120 flat rate" } },
+        "i2": { "type": "item", "settings": { "icon": "shield-check", "title": "Safe checkout", "text": "Payments are handled by Shopify's secure checkout." } },
+        "i3": { "type": "item", "settings": { "icon": "whatsapp", "title": "Questions before you buy?", "link_text": "WhatsApp Kiki", "special": "whatsapp", "text": "and she will help you choose." } }
+      },
+      "block_order": ["i1","i2","i3"],
+      "settings": {}
+    }
+  },
+  "order": ["hero","bestsellers","needs","week","story","paths","reviews","reorder","retreats","trust"]
+}

@@ -1,0 +1,16 @@
+{%- comment -%}
+  Add to cart straight from a card. One-variant products add at once;
+  products with flavours or sizes open the quick picker.
+  Usage: {% render 'buy-button', product: product, class: 'btn btn-add', label: 'Add to cart' %}
+{%- endcomment -%}
+{%- liquid
+  assign cls = class | default: 'btn btn-add'
+  assign text = label | default: 'Add to cart'
+-%}
+{%- if product.available == false -%}
+  <button class="{{ cls }}" type="button" disabled><span class="btn-t">Sold out</span></button>
+{%- elsif product.has_only_default_variant -%}
+  <button class="{{ cls }}" type="button" data-add="{{ product.selected_or_first_available_variant.id }}"{% if icon_only %} aria-label="Add {{ product.title | escape }} to cart"{% endif %}>{% if icon_only %}{% render 'icon', name: 'plus' %}{% else %}<span class="btn-t">{{ text }}</span>{% endif %}</button>
+{%- else -%}
+  <button class="{{ cls }}" type="button" data-qv="{{ product.handle }}"{% if icon_only %} aria-label="Choose options for {{ product.title | escape }}"{% endif %}>{% if icon_only %}{% render 'icon', name: 'plus' %}{% else %}<span class="btn-t">Choose {{ product.options.first | downcase }}</span>{% endif %}</button>
+{%- endif -%}

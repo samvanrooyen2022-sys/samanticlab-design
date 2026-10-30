@@ -1,0 +1,187 @@
+{%- comment -%}
+  Collection and shop-all page. Filters and sorting are Shopify's own
+  (set them up in the Search & Discovery app); they work on every collection.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign total = collection.products_count
+-%}
+{%- capture filter_form -%}
+  {%- for filter in collection.filters -%}
+    {%- case filter.type -%}
+      {%- when 'list', 'boolean' -%}
+        <details class="f-group" open>
+          <summary>{{ filter.label }} {% render 'icon', name: 'chevron-down' %}</summary>
+          <div class="f-opts">
+            {%- for v in filter.values -%}
+              <label class="check{% if v.count == 0 and v.active == false %} off{% endif %}">
+                <input type="checkbox" name="{{ v.param_name }}" value="{{ v.value }}"{% if v.active %} checked{% endif %}{% if v.count == 0 and v.active == false %} disabled{% endif %}>
+                <span class="box">{% render 'icon', name: 'check' %}</span><span class="lbl">{{ v.label }}</span><span class="c">{{ v.count }}</span>
+              </label>
+            {%- endfor -%}
+          </div>
+        </details>
+      {%- when 'price_range' -%}
+        <details class="f-group">
+          <summary>{{ filter.label }} {% render 'icon', name: 'chevron-down' %}</summary>
+          <div class="price-range">
+            <input type="number" inputmode="numeric" aria-label="Lowest price" name="{{ filter.min_value.param_name }}" placeholder="R 0"{% if filter.min_value.value %} value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"{% endif %}>
+            <span>to</span>
+            <input type="number" inputmode="numeric" aria-label="Highest price" name="{{ filter.max_value.param_name }}" placeholder="R {{ filter.range_max | money_without_currency | remove: ',' }}"{% if filter.max_value.value %} value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"{% endif %}>
+          </div>
+        </details>
+    {%- endcase -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+<div class="wrap">
+  <nav class="crumbs" aria-label="You are here"><a href="{{ routes.root_url }}">Home</a>{% render 'icon', name: 'chevron-right' %}<span>{{ collection.title }}</span></nav>
+  <div class="shop-top">
+    <h1 class="sig"{% if settings.motion %} data-words{% endif %}>{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}<div class="lede">{{ collection.description }}</div>{%- elsif s.fallback_text != blank -%}<p class="lede">{{ s.fallback_text }}</p>{%- endif -%}
+  </div>
+  {%- assign needs = section.blocks | where: 'type', 'need' -%}
+  {%- if needs.size > 0 -%}
+    <nav class="needs" aria-label="Shop by what you need">
+      {%- for block in needs -%}
+        {%- assign c = block.settings.collection -%}
+        {%- if c == blank -%}{%- continue -%}{%- endif -%}
+        <a class="need" href="{{ c.url }}"{% if c.handle == collection.handle %} aria-current="true"{% endif %} {{ block.shopify_attributes }}>
+          <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
+          <b>{{ block.settings.title | default: c.title }}</b>
+          <small>{% if c.products_count > 0 %}{{ c.products_count }} {{ c.products_count | pluralize: 'product', 'products' }}{% else %}Coming soon{% endif %}</small>
+        </a>
+      {%- endfor -%}
+    </nav>
+  {%- endif -%}
+</div>
+
+<div class="toolbar">
+  <div class="wrap">
+    <button class="btn btn-line tb-filter" type="button" data-sheet="filters-sheet">{% render 'icon', name: 'sliders-horizontal' %} Filter and sort</button>
+    <span class="tb-count">{{ total }} {{ total | pluralize: 'product', 'products' }}</span>
+    <label class="tb-sort"><span>Sort by</span><span class="select">
+      <select data-sort-select aria-label="Sort by">
+        {%- for o in collection.sort_options -%}<option value="{{ o.value }}"{% if o.value == sort_by %} selected{% endif %}>{{ o.name }}</option>{%- endfor -%}
+      </select>{% render 'icon', name: 'chevron-down' %}</span></label>
+  </div>
+</div>
+
+<div class="wrap">
+  {%- assign active = 0 -%}
+  <div class="active-chips">
+    {%- for filter in collection.filters -%}
+      {%- for v in filter.active_values -%}{%- assign active = active | plus: 1 -%}<a class="chip" href="{{ v.url_to_remove }}">{{ v.label }} {% render 'icon', name: 'x' %}</a>{%- endfor -%}
+      {%- if filter.type == 'price_range' -%}
+        {%- if filter.min_value.value or filter.max_value.value -%}
+          {%- assign active = active | plus: 1 -%}<a class="chip" href="{{ filter.url_to_remove }}">{{ filter.min_value.value | default: 0 | money }} – {{ filter.max_value.value | default: filter.range_max | money }} {% render 'icon', name: 'x' %}</a>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if active > 0 -%}<a class="chip clear" href="{{ collection.url }}?sort_by={{ sort_by }}">Clear all</a>{%- endif -%}
+  </div>
+
+  <div class="shop-body">
+    {%- if collection.filters.size > 0 -%}
+      <aside class="side" aria-label="Filters">
+        <form data-filter-form>{{ filter_form }}<input type="hidden" name="sort_by" value="{{ sort_by }}"></form>
+      </aside>
+    {%- endif -%}
+    <div>
+      {%- paginate collection.products by s.per_page -%}
+        <div class="shop-grid" data-shop-grid>
+          {%- for p in collection.products -%}
+            {% render 'product-card', product: p, badge: true, meta: s.show_meta, sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw' %}
+            {%- if forloop.index == s.promo_after and paginate.current_page == 1 -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'promo' -%}
+                  <div class="promo{% if block.settings.style == 'yellow' %} y{% endif %}" {{ block.shopify_attributes }}>
+                    <h3>{{ block.settings.heading }}</h3>
+                    <p>{{ block.settings.text }}</p>
+                    <a class="btn {% if block.settings.style == 'yellow' %}btn-ink{% else %}btn-w{% endif %}" href="{% render 'href', url: block.settings.link, fallback: block.settings.special %}">{{ block.settings.btn }} {% render 'icon', name: 'arrow-right' %}</a>
+                  </div>
+                  {%- break -%}
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          {%- else -%}
+            <div class="shop-empty">{% render 'icon', name: 'search' %}<p>No products match these filters.</p><a class="btn btn-line" href="{{ collection.url }}">Clear all filters</a></div>
+          {%- endfor -%}
+        </div>
+        <div class="more" data-more>
+          {%- if paginate.next -%}
+            {%- assign shown = paginate.current_offset | plus: collection.products.size -%}
+            <p>Showing {{ shown }} of {{ paginate.items }}</p>
+            <div class="bar"><i style="width:{{ shown | times: 100 | divided_by: paginate.items }}%"></i></div>
+            <a class="btn btn-line" href="{{ paginate.next.url }}" data-load-more>Load more products</a>
+          {%- elsif paginate.items > 0 -%}
+            <p>You've seen all {{ paginate.items }} {{ paginate.items | pluralize: 'product', 'products' }}.</p>
+          {%- endif -%}
+        </div>
+      {%- endpaginate -%}
+    </div>
+  </div>
+
+  {%- if s.help_heading != blank -%}
+    <div class="shop-help">
+      <div><h2 class="h2">{{ s.help_heading }}</h2><p>{{ s.help_text }}</p></div>
+      <div class="row">
+        {%- if settings.whatsapp != blank -%}<a class="btn" href="{% render 'href', fallback: 'whatsapp' %}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %} WhatsApp Kiki</a>{%- endif -%}
+        <a class="btn btn-y" href="{% render 'href', fallback: 'shift' %}">Book a consultation</a>
+      </div>
+    </div>
+  {%- endif -%}
+</div>
+
+{%- comment -%} Phone: filters and sort in a bottom sheet. {%- endcomment -%}
+<div class="sheet" id="filters-sheet" role="dialog" aria-modal="true" aria-label="Filter and sort">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <div class="sheet-top"><h2>Filter and sort</h2><button class="icon-btn" type="button" data-sheet-close aria-label="Close">{% render 'icon', name: 'x' %}</button></div>
+  <form class="sheet-form" data-filter-form data-manual>
+    <div class="sheet-body">
+      <details class="f-group" open><summary>Sort by {% render 'icon', name: 'chevron-down' %}</summary>
+        <div class="sort-opts">
+          {%- for o in collection.sort_options -%}<label class="radio"><input type="radio" name="sort_by" value="{{ o.value }}"{% if o.value == sort_by %} checked{% endif %}><span class="dot"></span>{{ o.name }}</label>{%- endfor -%}
+        </div>
+      </details>
+      {{ filter_form }}
+    </div>
+    <div class="sheet-foot"><a class="btn btn-line" href="{{ collection.url }}">Clear all</a><button class="btn" type="submit">Show products</button></div>
+  </form>
+</div>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "settings": [
+    { "type": "range", "id": "per_page", "label": "Products per load", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "checkbox", "id": "show_meta", "label": "Show product type above the name", "default": false },
+    { "type": "textarea", "id": "fallback_text", "label": "Intro when a collection has no description", "default": "Everything Kiki sells, in one place. Pick what you need below, or search for a product by name." },
+    { "type": "range", "id": "promo_after", "label": "Show the promo box after product", "min": 2, "max": 12, "step": 1, "default": 4 },
+    { "type": "text", "id": "help_heading", "label": "Help box heading", "default": "Can't find what you're looking for?" },
+    { "type": "textarea", "id": "help_text", "label": "Help box text", "default": "Send Kiki a message and she'll tell you which product fits, or book a Shift Consultation for the bigger picture." }
+  ],
+  "blocks": [
+    { "type": "need", "name": "Collection button", "settings": [
+      { "type": "collection", "id": "collection", "label": "Collection" },
+      { "type": "text", "id": "title", "label": "Title", "info": "Empty uses the collection name." },
+      { "type": "select", "id": "icon", "label": "Icon", "default": "leaf", "options": [
+        { "value": "layout-grid", "label": "Grid" }, { "value": "star", "label": "Star" }, { "value": "zap", "label": "Bolt" }, { "value": "activity", "label": "Pulse" },
+        { "value": "droplet", "label": "Drop" }, { "value": "brain", "label": "Brain" }, { "value": "heart", "label": "Heart" }, { "value": "leaf", "label": "Leaf" }
+      ] }
+    ] },
+    { "type": "promo", "name": "Promo box", "limit": 1, "settings": [
+      { "type": "text", "id": "heading", "label": "Heading", "default": "Not sure where to start?" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "Book sixty minutes with Kiki and leave knowing exactly what will help you." },
+      { "type": "text", "id": "btn", "label": "Button", "default": "Book a Shift Consultation" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "select", "id": "special", "label": "If the link is empty, use", "default": "shift", "options": [
+        { "value": "shift", "label": "Shift Consultation link" }, { "value": "quiz", "label": "Skin quiz link" }, { "value": "whatsapp", "label": "WhatsApp" }
+      ] },
+      { "type": "select", "id": "style", "label": "Colour", "default": "green", "options": [ { "value": "green", "label": "Sage green" }, { "value": "yellow", "label": "Yellow" } ] }
+    ] }
+  ]
+}
+{% endschema %}

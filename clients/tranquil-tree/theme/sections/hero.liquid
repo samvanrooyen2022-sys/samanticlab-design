@@ -1,0 +1,70 @@
+{%- comment -%}
+  Hero: photo (or muted video) grows from a framed card to full width as you scroll.
+  Words wrapped in *stars* in the heading turn yellow once it has built.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign heading = s.heading | escape
+  assign parts = heading | split: '*'
+-%}
+<style>
+  #shopify-section-{{ section.id }} .hero{ min-height:min({{ s.height }}px, calc(100svh - var(--header-h) - {{ s.peek }}px)); }
+  #shopify-section-{{ section.id }} .hero-media img.pi, #shopify-section-{{ section.id }} .hero-media video{ object-position:{{ s.focus_phone }}; }
+  @media (min-width:1024px){ #shopify-section-{{ section.id }} .hero-media img.pi, #shopify-section-{{ section.id }} .hero-media video{ object-position:{{ s.focus_desk }}; } }
+  {%- if s.shade_strength != 100 -%}#shopify-section-{{ section.id }} .hero-media::after{ opacity:{{ s.shade_strength | divided_by: 100.0 }}; }{%- endif -%}
+</style>
+<section class="hero hero--{{ s.align }}" data-hero aria-label="{{ s.label | escape }}">
+  <div class="hero-media">
+    <div class="ph has-img">
+      {%- if s.video != blank -%}
+        {{ s.video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, class: 'pi', image_size: '1600x' }}
+      {%- elsif s.image != blank -%}
+        {{ s.image | image_url: width: 2400 | image_tag: class: 'pi', widths: '480,750,1000,1400,1800,2400', sizes: '100vw', loading: 'eager', fetchpriority: 'high', alt: s.image.alt | default: s.alt }}
+      {%- else -%}
+        <img class="pi" src="{{ 'hero.webp' | asset_url }}" alt="{{ s.alt | escape }}" width="2400" height="1352" fetchpriority="high">
+      {%- endif -%}
+    </div>
+  </div>
+  <div class="hero-copy">
+    <h1 class="sig"{% if settings.motion %} data-words data-words-now{% endif %}>
+      {%- for part in parts -%}
+        {%- assign m = forloop.index | modulo: 2 -%}
+        {%- if m == 0 -%}<em class="hl-src">{{ part }}</em>{%- else -%}{{ part }}{%- endif -%}
+      {%- endfor -%}
+    </h1>
+    {%- if s.text != blank -%}<p class="hero-text">{{ s.text }}</p>{%- endif -%}
+    <div class="hero-btns">
+      {%- if s.btn1 != blank -%}<a class="btn btn-w" href="{% render 'href', url: s.btn1_link, fallback: 'bestsellers' %}">{{ s.btn1 }} {% render 'icon', name: 'arrow-right' %}</a>{%- endif -%}
+      {%- if s.btn2 != blank -%}<a class="btn btn-ghost" href="{% render 'href', url: s.btn2_link, fallback: 'shift' %}">{{ s.btn2 }}</a>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "div",
+  "class": "hero-wrap",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo", "info": "Leave empty to use the photo of Kiki that comes with the theme." },
+    { "type": "video", "id": "video", "label": "Video (plays muted, on repeat)", "info": "Replaces the photo when set. Keep it short and light." },
+    { "type": "text", "id": "alt", "label": "Photo description (for screen readers)", "default": "Kiki laughing with friends at a table of her Tranquil Tree products" },
+    { "type": "text", "id": "focus_phone", "label": "Photo focus on phones", "default": "28% 30%", "info": "Which part stays in view. First number left to right, second top to bottom." },
+    { "type": "text", "id": "focus_desk", "label": "Photo focus on desktop", "default": "center 30%" },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "The things I use every day to *feel good,* sent to your door.", "info": "Wrap words in *stars* to make them turn yellow." },
+    { "type": "textarea", "id": "text", "label": "Text under the heading (optional)" },
+    { "type": "select", "id": "align", "label": "Words on desktop", "default": "right", "options": [
+      { "value": "right", "label": "Right" }, { "value": "left", "label": "Left" }
+    ] },
+    { "type": "range", "id": "shade_strength", "label": "Shade behind the words", "min": 0, "max": 100, "step": 5, "unit": "%", "default": 100 },
+    { "type": "range", "id": "height", "label": "Height", "min": 400, "max": 1000, "step": 20, "unit": "px", "default": 700 },
+    { "type": "range", "id": "peek", "label": "Space left for the next section to peek in (phones)", "min": 0, "max": 200, "step": 8, "unit": "px", "default": 96 },
+    { "type": "text", "id": "btn1", "label": "Button 1", "default": "Shop bestsellers" },
+    { "type": "url", "id": "btn1_link", "label": "Button 1 link", "info": "Empty goes to the Bestsellers collection." },
+    { "type": "text", "id": "btn2", "label": "Button 2", "default": "Book a Shift Consultation" },
+    { "type": "url", "id": "btn2_link", "label": "Button 2 link", "info": "Empty uses the Shift Consultation link in Theme settings." },
+    { "type": "text", "id": "label", "label": "Section name (for screen readers)", "default": "Welcome" }
+  ],
+  "presets": [{ "name": "Hero" }]
+}
+{% endschema %}

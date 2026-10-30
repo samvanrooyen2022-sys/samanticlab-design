@@ -1,0 +1,17 @@
+<div class="wrap page-in">
+  <h1 class="sig">{{ blog.title }}</h1>
+  {%- paginate blog.articles by 12 -%}
+    <div class="shop-grid" style="padding-block:24px 72px">
+      {%- for article in blog.articles -%}
+        <a class="card" href="{{ article.url }}">
+          <span class="card-media">{%- if article.image -%}<span class="ph has-img">{{ article.image | image_url: width: 800 | image_tag: class: 'pi', loading: 'lazy' }}</span>{%- else -%}<span class="ph">{% render 'icon', name: 'image' %}</span>{%- endif -%}</span>
+          <span class="card-label"><b class="card-name">{{ article.title }}</b><span class="card-does">{{ article.excerpt_or_content | strip_html | truncatewords: 20 }}</span></span>
+        </a>
+      {%- endfor -%}
+    </div>
+    {%- if paginate.next -%}<div class="more"><a class="btn btn-line" href="{{ paginate.next.url }}">Older posts</a></div>{%- endif -%}
+  {%- endpaginate -%}
+</div>
+{% schema %}
+{ "name": "Blog", "settings": [] }
+{% endschema %}

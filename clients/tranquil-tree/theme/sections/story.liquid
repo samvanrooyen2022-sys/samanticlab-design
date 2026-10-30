@@ -1,0 +1,47 @@
+{%- comment -%} Her story: pins in place, lines light up one by one, then the photo grows to fill the screen. {%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="story" data-story aria-labelledby="h-{{ section.id }}">
+  <div class="story-stage">
+    <div class="story-photo">
+      {%- if s.image != blank -%}
+        <div class="ph has-img">{{ s.image | image_url: width: 2000 | image_tag: class: 'pi', widths: '600,1000,1400,2000', sizes: '100vw', loading: 'lazy', alt: s.image.alt | default: s.heading }}</div>
+      {%- else -%}
+        <div class="ph soft"><div class="ph-in">{% render 'icon', name: 'image' %}<span class="ph-cap">Kiki's "how it all started" photo</span></div></div>
+      {%- endif -%}
+    </div>
+    <div class="story-lines">
+      <h2 class="h2" id="h-{{ section.id }}">{{ s.heading }}</h2>
+      {%- for block in section.blocks -%}
+        <p class="story-line" {{ block.shopify_attributes }}>{{ block.settings.text }}</p>
+      {%- endfor -%}
+    </div>
+    {%- if s.btn != blank -%}
+      <div class="story-end" data-story-end>
+        <a class="btn btn-y" href="{% render 'href', url: s.btn_link, fallback: 'shift' %}">{{ s.btn }} {% render 'icon', name: 'arrow-right' %}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Her story",
+  "tag": "div",
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Photo" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How it all started" },
+    { "type": "text", "id": "btn", "label": "Button", "default": "Book a Shift Consultation with Kiki" },
+    { "type": "url", "id": "btn_link", "label": "Button link", "info": "Empty uses the Shift Consultation link in Theme settings." }
+  ],
+  "blocks": [
+    { "type": "line", "name": "Line", "settings": [ { "type": "textarea", "id": "text", "label": "Line", "default": "One line of Kiki's story." } ] }
+  ],
+  "presets": [{ "name": "Her story", "blocks": [
+    { "type": "line", "settings": { "text": "Where she was when it began." } },
+    { "type": "line", "settings": { "text": "The first product that changed something for her." } },
+    { "type": "line", "settings": { "text": "Why she started sharing it with friends." } },
+    { "type": "line", "settings": { "text": "How Tranquil Tree grew from there." } },
+    { "type": "line", "settings": { "text": "What she wants for the women who buy from her." } }
+  ] }]
+}
+{% endschema %}

@@ -1,0 +1,227 @@
+{%- liquid
+  assign logo_alt = section.settings.logo.alt | default: shop.name | escape
+-%}
+{%- capture logo_img -%}
+  {%- if section.settings.logo != blank -%}
+    {{ section.settings.logo | image_url: width: 600 | image_tag: alt: logo_alt, widths: '200,300,400,600', sizes: '220px', loading: 'eager' }}
+  {%- else -%}
+    <img src="{{ 'logo.webp' | asset_url }}" alt="{{ logo_alt }}" width="277" height="74">
+  {%- endif -%}
+{%- endcapture -%}
+<style>
+  .logo img{ height:{{ section.settings.logo_h }}px; width:auto; }
+  @media (min-width:768px){ .header .logo img{ height:{{ section.settings.logo_h_desk }}px; } }
+</style>
+
+<header class="header" data-header>
+  <div class="wrap">
+    <div class="header-l">
+      <button class="icon-btn menu-btn" type="button" data-open="menu" aria-label="Open menu" aria-controls="menu" aria-expanded="false">{% render 'icon', name: 'menu' %}</button>
+      <nav class="desk-nav" aria-label="Main">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'nav_link' -%}
+            {%- if block.settings.opens_menu -%}
+              <button type="button" data-open="menu" aria-controls="menu" aria-expanded="false" {{ block.shopify_attributes }}>{{ block.settings.label }} {% render 'icon', name: 'chevron-down' %}</button>
+            {%- else -%}
+              <a href="{% render 'href', url: block.settings.link, fallback: block.settings.special %}" {% if block.settings.link == request.path %}aria-current="page"{% endif %} {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </nav>
+    </div>
+    <a class="logo" href="{{ routes.root_url }}">{{ logo_img }}</a>
+    <div class="header-r">
+      <button class="icon-btn" type="button" data-open="search" aria-label="Search products">{% render 'icon', name: 'search' %}</button>
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <a class="icon-btn hide-s" href="{{ routes.account_url }}" aria-label="My account">{% render 'icon', name: 'user' %}</a>
+      {%- endif -%}
+      <a class="icon-btn" href="{{ routes.cart_url }}" data-open="cart" aria-label="Open cart">{% render 'icon', name: 'shopping-bag' %}<span class="count{% if cart.item_count > 0 %} has{% endif %}" data-count>{{ cart.item_count }}</span></a>
+    </div>
+  </div>
+</header>
+
+{%- comment -%} Phone: full-screen menu. Desktop: drops down under the header as a shop menu. {%- endcomment -%}
+<div class="menu-scrim" data-menu-scrim></div>
+<div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu">
+  <div class="menu-top">
+    <span class="logo">{{ logo_img }}</span>
+    <button class="icon-btn" type="button" data-close aria-label="Close menu">{% render 'icon', name: 'x' %}</button>
+  </div>
+  <div class="menu-scroll">
+    <div class="menu-in">
+      <a class="btn btn-wide m-item" style="--i:0" href="{{ routes.collections_url }}/all">{% render 'icon', name: 'layout-grid' %} {{ section.settings.all_label }}</a>
+      <button class="m-search m-item" style="--i:1" type="button" data-open="search">{% render 'icon', name: 'search' %} {{ section.settings.search_placeholder }}</button>
+
+      <nav class="m-colls-wrap m-item" style="--i:2" aria-label="Collections">
+        <div class="m-h"><span>{{ section.settings.colls_heading }}</span></div>
+        <div class="m-colls">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'menu_collection' -%}
+              {%- assign c = block.settings.collection -%}
+              <a class="m-coll" href="{{ c.url | default: '#' }}" {{ block.shopify_attributes }}>
+                <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
+                <span><b>{{ block.settings.title | default: c.title | default: 'Pick a collection' }}</b><small>{{ block.settings.sub }}</small></span>
+                {%- if c != blank -%}<span class="n">{% if c.products_count > 0 %}{{ c.products_count }}{% else %}Soon{% endif %}</span>{%- endif -%}
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </nav>
+
+      {%- assign best = section.settings.menu_best -%}
+      {%- if best != blank and best.products_count > 0 -%}
+        <div class="m-best-wrap m-item" style="--i:3">
+          <div class="m-h"><span>{{ section.settings.best_heading | default: best.title }}</span><a href="{{ best.url }}">See all {% render 'icon', name: 'arrow-right' %}</a></div>
+          <div class="m-rail">
+            {%- for p in best.products limit: 4 -%}
+              <div class="m-prod">
+                <a href="{{ p.url }}">{% render 'product-media', product: p, sizes: '160px' %}<b>{{ p.title }}</b></a>
+                <div class="row">{% render 'price', product: p %}{% render 'buy-button', product: p, class: 'add', icon_only: true %}</div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- assign w = section.settings.menu_pick -%}
+      {%- if w != blank -%}
+        <div class="m-pick-wrap m-item" style="--i:4">
+          <div class="m-h"><span>{{ section.settings.pick_heading }}</span></div>
+          <div class="m-pick">
+            <a href="{{ w.url }}" aria-label="{{ w.title | escape }}">{% render 'product-media', product: w, sizes: '240px' %}</a>
+            <div>
+              <small>{{ section.settings.pick_label }}</small>
+              <b>{{ w.title }}</b>
+              <div class="row">{% render 'price', product: w %}{% render 'buy-button', product: w, class: 'btn btn-w' %}</div>
+            </div>
+          </div>
+        </div>
+      {%- endif -%}
+
+      <div class="m-links-wrap m-item" style="--i:5">
+        <div class="m-links">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'quick_link' -%}
+              <a class="{% if block.settings.hot %}hot{% endif %}" href="{% render 'href', url: block.settings.link, fallback: block.settings.special %}" {{ block.shopify_attributes }}><b>{{ block.settings.label }} {% render 'icon', name: 'arrow-right' %}</b><small>{{ block.settings.sub }}</small></a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+
+      <div class="m-help-wrap m-item" style="--i:6">
+        <div class="m-help">
+          {%- if shop.customer_accounts_enabled -%}<a href="{{ routes.account_url }}">{% render 'icon', name: 'package' %} My orders</a>{%- endif -%}
+          {%- if settings.whatsapp != blank -%}<a href="{% render 'href', fallback: 'whatsapp' %}" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %} WhatsApp Kiki</a>{%- endif -%}
+        </div>
+      </div>
+
+      <div class="m-foot m-item" style="--i:7">
+        <span>{{ section.settings.menu_foot }}</span>
+        <div class="socials">
+          {%- if settings.facebook_url != blank -%}<a href="{{ settings.facebook_url }}" aria-label="Facebook" target="_blank" rel="noopener">{% render 'icon', name: 'facebook' %}</a>{%- endif -%}
+          {%- if settings.instagram_url != blank -%}<a href="{{ settings.instagram_url }}" aria-label="Instagram" target="_blank" rel="noopener">{% render 'icon', name: 'instagram' %}</a>{%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Search: Shopify predictive search, filled by theme.js. {%- endcomment -%}
+<div class="panel" id="search" role="dialog" aria-modal="true" aria-label="Search">
+  <form class="panel-top" action="{{ routes.search_url }}" method="get" role="search">
+    <label class="search-field">
+      <span class="sr">Search products</span>
+      {% render 'icon', name: 'search' %}
+      <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" autocomplete="off" data-search-input enterkeyhint="search">
+      <input type="hidden" name="type" value="product">
+    </label>
+    <button class="icon-btn" type="button" data-close aria-label="Close search">{% render 'icon', name: 'x' %}</button>
+  </form>
+  <div class="panel-body">
+    {%- assign chips = section.settings.search_chips | split: ',' -%}
+    {%- if chips.size > 0 -%}
+      <div class="chips" data-chips>
+        {%- for chip in chips -%}<button type="button">{{ chip | strip }}</button>{%- endfor -%}
+      </div>
+    {%- endif -%}
+    <div class="search-results" data-search-results aria-live="polite"></div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "header-wrap",
+  "settings": [
+    { "type": "header", "content": "Logo" },
+    { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Leave empty to use the Tranquil Tree logo that comes with the theme." },
+    { "type": "range", "id": "logo_h", "label": "Logo height on phones", "min": 24, "max": 64, "step": 1, "unit": "px", "default": 38 },
+    { "type": "range", "id": "logo_h_desk", "label": "Logo height on desktop", "min": 24, "max": 80, "step": 1, "unit": "px", "default": 48 },
+    { "type": "checkbox", "id": "show_account", "label": "Show account icon", "default": true },
+    { "type": "header", "content": "Menu" },
+    { "type": "text", "id": "all_label", "label": "Shop-all button", "default": "Shop all products" },
+    { "type": "text", "id": "colls_heading", "label": "Collections heading", "default": "Shop by what you need" },
+    { "type": "collection", "id": "menu_best", "label": "Bestsellers collection" },
+    { "type": "text", "id": "best_heading", "label": "Bestsellers heading", "default": "Bestsellers" },
+    { "type": "product", "id": "menu_pick", "label": "This week's product" },
+    { "type": "text", "id": "pick_heading", "label": "Pick heading", "default": "This week from Kiki" },
+    { "type": "text", "id": "pick_label", "label": "Pick small line", "default": "Her pick from her latest post" },
+    { "type": "text", "id": "menu_foot", "label": "Menu footer line", "default": "Delivered across South Africa" },
+    { "type": "header", "content": "Search" },
+    { "type": "text", "id": "search_placeholder", "label": "Search box text", "default": "Search all products" },
+    { "type": "text", "id": "search_chips", "label": "Quick search words", "info": "Separate with commas.", "default": "Collagen, Creatine, Serum, Protein, Mushrooms" }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Desktop link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Link" },
+        { "type": "checkbox", "id": "opens_menu", "label": "Opens the shop menu instead of a page", "default": false },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "select", "id": "special", "label": "If the link is empty, use", "default": "custom", "options": [
+          { "value": "custom", "label": "Nothing" },
+          { "value": "shift", "label": "Shift Consultation link" },
+          { "value": "quiz", "label": "Skin quiz link" },
+          { "value": "retreats", "label": "Retreats link" },
+          { "value": "whatsapp", "label": "WhatsApp" },
+          { "value": "links", "label": "Kiki's links page" }
+        ] }
+      ]
+    },
+    {
+      "type": "menu_collection",
+      "name": "Menu collection",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "text", "id": "title", "label": "Title", "info": "Leave empty to use the collection name." },
+        { "type": "text", "id": "sub", "label": "Small line" },
+        { "type": "select", "id": "icon", "label": "Icon", "default": "leaf", "options": [
+          { "value": "zap", "label": "Energy (bolt)" }, { "value": "activity", "label": "Body (pulse)" },
+          { "value": "droplet", "label": "Skin (drop)" }, { "value": "brain", "label": "Mindset (brain)" },
+          { "value": "heart", "label": "Heart" }, { "value": "leaf", "label": "Leaf" }, { "value": "star", "label": "Star" },
+          { "value": "layout-grid", "label": "Grid" }, { "value": "shopping-bag", "label": "Bag" }, { "value": "package", "label": "Package" }
+        ] }
+      ]
+    },
+    {
+      "type": "quick_link",
+      "name": "Menu quick link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Link" },
+        { "type": "text", "id": "sub", "label": "Small line" },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "select", "id": "special", "label": "If the link is empty, use", "default": "custom", "options": [
+          { "value": "custom", "label": "Nothing" },
+          { "value": "shift", "label": "Shift Consultation link" },
+          { "value": "quiz", "label": "Skin quiz link" },
+          { "value": "retreats", "label": "Retreats link" },
+          { "value": "whatsapp", "label": "WhatsApp" },
+          { "value": "links", "label": "Kiki's links page" }
+        ] },
+        { "type": "checkbox", "id": "hot", "label": "Highlight in yellow", "default": false }
+      ]
+    }
+  ]
+}
+{% endschema %}

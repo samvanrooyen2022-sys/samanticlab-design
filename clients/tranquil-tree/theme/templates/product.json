@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": { "type": "title" },
+        "price": { "type": "price" },
+        "does": { "type": "does" },
+        "picker": { "type": "variant_picker" },
+        "buy": { "type": "buy_buttons", "settings": { "label": "Add to cart" } },
+        "delivery": { "type": "delivery", "settings": { "line_1": "Delivered in 3–5 days, R120", "line_2": "Secure checkout by Shopify" } },
+        "why": { "type": "why", "settings": { "heading": "Why Kiki uses it" } },
+        "acc-in": { "type": "accordion", "settings": { "heading": "What's in it", "source": "description", "open": true } },
+        "acc-use": { "type": "accordion", "settings": { "heading": "How to use it", "source": "metafield", "metafield": "custom.how_to_use" } },
+        "acc-del": { "type": "accordion", "settings": { "heading": "Delivery and returns", "source": "delivery" } }
+      },
+      "block_order": ["title","price","does","picker","buy","delivery","why","acc-in","acc-use","acc-del"],
+      "settings": {}
+    },
+    "reviews": {
+      "type": "reviews",
+      "settings": { "heading": "What people say about it", "pad_top": 40 }
+    },
+    "recs": {
+      "type": "product-recommendations",
+      "settings": {}
+    },
+    "ask": {
+      "type": "ask",
+      "settings": {}
+    }
+  },
+  "order": ["main","reviews","recs","ask"]
+}

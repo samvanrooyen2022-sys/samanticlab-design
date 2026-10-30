@@ -1,0 +1,10 @@
+{%- comment -%} Layers shared by every page: the quick option picker, the phone filter sheet scrim and the yellow Shop button. {%- endcomment -%}
+<div class="sheet-scrim" data-sheet-scrim></div>
+<div class="sheet" id="qv-sheet" role="dialog" aria-modal="true" aria-label="Choose an option">
+  <div class="sheet-grab" aria-hidden="true"></div>
+  <div class="sheet-top"><h2 data-qv-title>Choose an option</h2><button class="icon-btn" type="button" data-sheet-close aria-label="Close">{% render 'icon', name: 'x' %}</button></div>
+  <div class="sheet-body" data-qv-body></div>
+</div>
+{%- if settings.sticky_shop and template.name != 'product' and template.name != 'cart' -%}
+  <a class="btn btn-y fab" href="{{ routes.collections_url }}/all" data-fab>{% render 'icon', name: 'shopping-bag' %} Shop</a>
+{%- endif -%}

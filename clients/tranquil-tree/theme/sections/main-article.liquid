@@ -1,0 +1,9 @@
+<article class="wrap page-in">
+  <p class="crumbs"><a href="{{ blog.url }}">{{ blog.title }}</a></p>
+  <h1 class="sig">{{ article.title }}</h1>
+  {%- if article.image -%}<div class="ph has-img article-img">{{ article.image | image_url: width: 1600 | image_tag: class: 'pi', sizes: '100vw', widths: '600,1000,1600' }}</div>{%- endif -%}
+  <div class="rte">{{ article.content }}</div>
+</article>
+{% schema %}
+{ "name": "Article", "settings": [] }
+{% endschema %}

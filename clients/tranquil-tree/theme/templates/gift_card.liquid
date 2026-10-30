@@ -1,0 +1,23 @@
+{%- layout none -%}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your gift card – {{ shop.name }}</title>
+  {% render 'theme-styles' %}
+  <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+  <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" defer></script>
+  {{ content_for_header }}
+</head>
+<body>
+  <main class="links"><div class="links-in" style="text-align:center">
+    <img src="{{ 'logo.webp' | asset_url }}" alt="{{ shop.name | escape }}" width="277" height="74" style="margin:0 auto 24px">
+    <h1>{{ gift_card.balance | money }}</h1>
+    <p class="links-intro">{% if gift_card.enabled == false or gift_card.expired %}This gift card can no longer be used.{% else %}Your gift card for {{ shop.name }}.{% endif %}</p>
+    <p class="link-btn" style="justify-content:center;font-size:1.25rem;letter-spacing:.08em">{{ gift_card.code | format_code }}</p>
+    {%- if gift_card.pass_url -%}<a class="link-btn" href="{{ gift_card.pass_url }}">Add to Apple Wallet</a>{%- endif -%}
+    <a class="link-btn main" href="{{ shop.url }}">Shop now <span class="go">→</span></a>
+    <button class="link-btn" type="button" onclick="window.print()">Print</button>
+  </div></main>
+</body>
+</html>

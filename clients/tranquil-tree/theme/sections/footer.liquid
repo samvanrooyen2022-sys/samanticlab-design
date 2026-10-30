@@ -1,0 +1,133 @@
+<footer class="footer">
+  {%- if section.settings.show_join -%}
+  <div class="f-join wrap">
+    <div class="f-join-in">
+      <div class="ph f-kiki">
+        {%- if section.settings.kiki != blank -%}
+          {{ section.settings.kiki | image_url: width: 200 | image_tag: alt: 'Kiki', loading: 'lazy' }}
+        {%- else -%}
+          <img src="{{ 'kiki.webp' | asset_url }}" alt="Kiki" width="192" height="192" loading="lazy">
+        {%- endif -%}
+      </div>
+      <div>
+        <p class="sig"{% if settings.motion %} data-words{% endif %}>{{ section.settings.join_heading }}</p>
+        <p>{{ section.settings.join_text }}</p>
+      </div>
+      {%- form 'customer', class: 'signup', id: 'footer-signup' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <label for="nl-email">{{ section.settings.join_label }}</label>
+        <div class="signup-row">
+          <input id="nl-email" type="email" name="contact[email]" placeholder="name@example.com" autocomplete="email" inputmode="email" required>
+          <button class="btn btn-ink" type="submit"><span class="btn-t">{{ section.settings.join_button }}</span></button>
+        </div>
+        <small>{{ section.settings.join_note }}</small>
+        {%- if form.posted_successfully? -%}
+          <p class="signup-msg" role="status">{{ section.settings.join_thanks }}</p>
+        {%- elsif form.errors -%}
+          <p class="signup-msg is-error" role="alert">That email address doesn't look right. Please check it.</p>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+  </div>
+  {%- endif -%}
+
+  <div class="wrap">
+    <div class="f-main">
+      <div class="f-brand">
+        <a class="logo" href="{{ routes.root_url }}">
+          {%- if section.settings.logo != blank -%}
+            {{ section.settings.logo | image_url: width: 600 | image_tag: alt: shop.name, loading: 'lazy' }}
+          {%- else -%}
+            <img src="{{ 'logo.webp' | asset_url }}" alt="{{ shop.name | escape }}" width="277" height="74" loading="lazy">
+          {%- endif -%}
+        </a>
+        {%- if section.settings.brand_text != blank -%}<p>{{ section.settings.brand_text }}</p>{%- endif -%}
+        {%- if settings.whatsapp != blank and section.settings.help_title != blank -%}
+          <a class="f-help" href="{% render 'href', fallback: 'whatsapp' %}" target="_blank" rel="noopener">
+            <span class="ico">{% render 'icon', name: 'whatsapp' %}</span>
+            <span><b>{{ section.settings.help_title }}</b><span>{{ section.settings.help_text }}</span></span>
+          </a>
+        {%- endif -%}
+        <div class="socials">
+          {%- if settings.facebook_url != blank -%}<a href="{{ settings.facebook_url }}" aria-label="{{ shop.name }} on Facebook" target="_blank" rel="noopener">{% render 'icon', name: 'facebook' %}</a>{%- endif -%}
+          {%- if settings.instagram_url != blank -%}<a href="{{ settings.instagram_url }}" aria-label="{{ shop.name }} on Instagram" target="_blank" rel="noopener">{% render 'icon', name: 'instagram' %}</a>{%- endif -%}
+          {%- if settings.whatsapp != blank -%}<a href="{% render 'href', fallback: 'whatsapp' %}" aria-label="WhatsApp Kiki" target="_blank" rel="noopener">{% render 'icon', name: 'whatsapp' %}</a>{%- endif -%}
+        </div>
+      </div>
+
+      {%- comment -%} Columns: a "Column" block starts a new column; the "Link" blocks after it fill it. {%- endcomment -%}
+      <div class="f-cols" data-fcols>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'column' -%}
+            {%- assign start = forloop.index -%}
+            <details {{ block.shopify_attributes }}>
+              <summary>{{ block.settings.heading }} {% render 'icon', name: 'chevron-down' %}</summary>
+              <ul>
+                {%- for l in section.blocks offset: start -%}
+                  {%- if l.type == 'column' -%}{%- break -%}{%- endif -%}
+                  <li {{ l.shopify_attributes }}><a href="{% render 'href', url: l.settings.link, fallback: l.settings.special %}">{{ l.settings.label }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="f-pay">
+      <span>{% render 'icon', name: 'shield-check' %}</span><span>{{ section.settings.pay_text }}</span>
+      {%- if section.settings.show_pay -%}
+        <span class="pay-icons">{%- for type in shop.enabled_payment_types -%}{{ type | payment_type_svg_tag: class: 'pay' }}{%- endfor -%}</span>
+      {%- endif -%}
+    </div>
+    <div class="f-base">
+      <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.base_text }}</span>
+      {%- if section.settings.credit != blank -%}<span>{{ section.settings.credit }}</span>{%- endif -%}
+      <button class="to-top" type="button" data-top>{% render 'icon', name: 'arrow-up' %} Back to top</button>
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "footer-wrap",
+  "settings": [
+    { "type": "header", "content": "Join Kiki's list" },
+    { "type": "checkbox", "id": "show_join", "label": "Show the sign-up box", "default": true },
+    { "type": "image_picker", "id": "kiki", "label": "Round photo", "info": "Leave empty to use the photo of Kiki that comes with the theme." },
+    { "type": "text", "id": "join_heading", "label": "Heading", "default": "Thank you for buying from someone you know." },
+    { "type": "textarea", "id": "join_text", "label": "Text", "default": "Join Kiki's list and you'll hear first when something new arrives or a favourite is back." },
+    { "type": "text", "id": "join_label", "label": "Field label", "default": "Your email address" },
+    { "type": "text", "id": "join_button", "label": "Button", "default": "Join" },
+    { "type": "text", "id": "join_note", "label": "Small note", "default": "One email when there's news. Leave any time." },
+    { "type": "text", "id": "join_thanks", "label": "Thank-you message", "default": "You're on the list. Kiki's next pick will land in your inbox." },
+    { "type": "header", "content": "Brand" },
+    { "type": "image_picker", "id": "logo", "label": "Logo", "info": "Leave empty to use the logo that comes with the theme." },
+    { "type": "textarea", "id": "brand_text", "label": "Short line", "default": "Kiki's shop for the energy, body, skin and mindset products she uses herself, packed and sent across South Africa." },
+    { "type": "text", "id": "help_title", "label": "WhatsApp box heading", "default": "Not sure what to choose?", "info": "Shows when a WhatsApp number is set in Theme settings." },
+    { "type": "text", "id": "help_text", "label": "WhatsApp box text", "default": "WhatsApp Kiki and she will help." },
+    { "type": "header", "content": "Bottom" },
+    { "type": "text", "id": "pay_text", "label": "Payment line", "default": "Secure checkout by Shopify." },
+    { "type": "checkbox", "id": "show_pay", "label": "Show payment icons", "default": true },
+    { "type": "text", "id": "base_text", "label": "After the copyright", "default": "Prices in rand." },
+    { "type": "inline_richtext", "id": "credit", "label": "Credit", "default": "Site by <a href=\"https://samanticlab.netlify.app/\">Samantic Lab</a>" }
+  ],
+  "blocks": [
+    { "type": "column", "name": "Column", "settings": [ { "type": "text", "id": "heading", "label": "Heading", "default": "Column" } ] },
+    { "type": "link", "name": "Link", "settings": [
+      { "type": "text", "id": "label", "label": "Label", "default": "Link" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "select", "id": "special", "label": "If the link is empty, use", "default": "custom", "options": [
+        { "value": "custom", "label": "Nothing" },
+        { "value": "shift", "label": "Shift Consultation link" },
+        { "value": "quiz", "label": "Skin quiz link" },
+        { "value": "retreats", "label": "Retreats link" },
+        { "value": "whatsapp", "label": "WhatsApp" },
+        { "value": "links", "label": "Kiki's links page" },
+        { "value": "account", "label": "Customer account" }
+      ] }
+    ] }
+  ]
+}
+{% endschema %}

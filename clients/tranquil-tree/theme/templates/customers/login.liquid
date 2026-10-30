@@ -1,0 +1,21 @@
+<div class="wrap acct">
+  <h1 class="sig">Sign in</h1>
+  {%- form 'customer_login', class: 'acct-form' -%}
+    {{ form.errors | default_errors }}
+    <label>Email<input type="email" name="customer[email]" autocomplete="email" required></label>
+    {%- if form.password_needed -%}<label>Password<input type="password" name="customer[password]" autocomplete="current-password"></label>{%- endif -%}
+    <button class="btn btn-wide" type="submit">Sign in</button>
+  {%- endform -%}
+  <p><a href="#recover" data-toggle-recover>Forgot your password?</a> · <a href="{{ routes.account_register_url }}">Create an account</a></p>
+  <div id="recover">
+    {%- form 'recover_customer_password', class: 'acct-form' -%}
+      {{ form.errors | default_errors }}
+      {%- if form.posted_successfully? -%}<p>We've sent you an email with a link to reset your password.</p>{%- endif -%}
+      <label>Email for a password reset<input type="email" name="email" autocomplete="email" required></label>
+      <button class="btn btn-line" type="submit">Send reset link</button>
+    {%- endform -%}
+  </div>
+  {%- if shop.checkout.guest_login -%}
+    {%- form 'guest_login' -%}<button class="btn btn-line" type="submit">Continue as a guest</button>{%- endform -%}
+  {%- endif -%}
+</div>
