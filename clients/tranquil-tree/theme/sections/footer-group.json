@@ -127,6 +127,13 @@
             "label": "For pets",
             "group": "pets"
           }
+        },
+        "l-mush": {
+          "type": "link",
+          "settings": {
+            "label": "Mushrooms",
+            "group": "mushrooms"
+          }
         }
       },
       "block_order": [
@@ -134,6 +141,7 @@
         "l-best",
         "l-packs",
         "l-skin",
+        "l-mush",
         "l-drinks",
         "l-eat",
         "l-supps",

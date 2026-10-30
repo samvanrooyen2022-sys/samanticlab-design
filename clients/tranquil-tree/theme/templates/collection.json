@@ -64,8 +64,8 @@
           "type": "group",
           "settings": {
             "title": "Supplements and powders",
-            "intro": "Protein, creatine, collagen, mushrooms and daily powders.",
-            "words": "creatine, bcaa, protein, collagen, superfood, powder, mushroom, shroom, capsule, tablet, gumm, vitamin, magnesium, omega, greens",
+            "intro": "Protein, creatine, collagen and daily powders.",
+            "words": "creatine, bcaa, protein, collagen, superfood, powder, capsule, tablet, gumm, vitamin, magnesium, omega, greens",
             "anchor": "supplements"
           }
         },
@@ -116,11 +116,29 @@
             "group": "pets",
             "icon": "leaf"
           }
+        },
+        "g-mush": {
+          "type": "group",
+          "settings": {
+            "title": "Mushrooms",
+            "anchor": "mushrooms",
+            "intro": "Every mushroom product in one place: Just Mushrooms, Mega Shrooms and the rest.",
+            "words": "mushroom, shroom, lion's mane, lions mane, reishi, chaga, cordyceps, turkey tail, shiitake, maitake"
+          }
+        },
+        "n-mush": {
+          "type": "need",
+          "settings": {
+            "title": "Mushrooms",
+            "group": "mushrooms",
+            "icon": "brain"
+          }
         }
       },
       "block_order": [
         "n-all",
         "n-packs",
+        "n-mush",
         "n-skin",
         "n-drinks",
         "n-eat",
@@ -128,6 +146,7 @@
         "n-pets",
         "promo",
         "g-packs",
+        "g-mush",
         "g-skin",
         "g-drinks",
         "g-eat",

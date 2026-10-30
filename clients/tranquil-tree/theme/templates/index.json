@@ -49,8 +49,8 @@
             "title": "Supplements",
             "group": "supplements",
             "icon": "activity",
-            "search": "creatine OR collagen OR mushrooms OR superfood",
-            "text": "Creatine, BCAAs, collagen, mushrooms and daily powders."
+            "search": "creatine OR collagen OR superfood OR protein",
+            "text": "Creatine, BCAAs, collagen and daily powders."
           }
         },
         "m-packs": {
@@ -73,6 +73,13 @@
             "label": "Bestsellers",
             "special": "bestsellers"
           }
+        },
+        "m-mush": {
+          "type": "more_link",
+          "settings": {
+            "label": "Mushrooms",
+            "group": "mushrooms"
+          }
         }
       },
       "block_order": [
@@ -81,6 +88,7 @@
         "t-eat",
         "t-supps",
         "m-packs",
+        "m-mush",
         "m-pets",
         "m-best"
       ],

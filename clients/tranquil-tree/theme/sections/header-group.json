@@ -112,7 +112,7 @@
           "type": "menu_collection",
           "settings": {
             "title": "Supplements and powders",
-            "sub": "Creatine, collagen, mushrooms",
+            "sub": "Creatine, collagen, daily powders",
             "group": "supplements",
             "icon": "activity"
           }
@@ -125,6 +125,15 @@
             "group": "pets",
             "icon": "leaf"
           }
+        },
+        "mc-mush": {
+          "type": "menu_collection",
+          "settings": {
+            "title": "Mushrooms",
+            "sub": "Just Mushrooms, Mega Shrooms and more",
+            "group": "mushrooms",
+            "icon": "brain"
+          }
         }
       },
       "block_order": [
@@ -134,6 +143,7 @@
         "nav-retreats",
         "mc-packs",
         "mc-skin",
+        "mc-mush",
         "mc-drinks",
         "mc-eat",
         "mc-supps",
