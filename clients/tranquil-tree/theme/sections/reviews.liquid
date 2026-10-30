@@ -1,7 +1,7 @@
 {%- comment -%} Real reviews. Add the Loox app block here in the theme editor. {%- endcomment -%}
 <section class="sec" style="padding-top:{{ section.settings.pad_top }}px" aria-labelledby="h-{{ section.id }}">
   <div class="wrap">
-    {%- if section.settings.heading != blank -%}<div class="sec-head"><h2 class="h2" id="h-{{ section.id }}"{% if settings.motion %} data-words{% endif %}>{{ section.settings.heading }}</h2></div>{%- endif -%}
+    {%- if section.settings.heading != blank and section.blocks.size > 0 or section.settings.heading != blank and request.design_mode -%}<div class="sec-head"><h2 class="h2" id="h-{{ section.id }}"{% if settings.motion %} data-words{% endif %}>{{ section.settings.heading }}</h2></div>{%- endif -%}
     {%- if section.blocks.size > 0 -%}
       {%- for block in section.blocks -%}
         {%- case block.type -%}
@@ -9,7 +9,7 @@
           {%- when 'liquid' -%}<div {{ block.shopify_attributes }}>{{ block.settings.code }}</div>
         {%- endcase -%}
       {%- endfor -%}
-    {%- else -%}
+    {%- elsif request.design_mode -%}
       <div class="loox">
         <div class="stars">{% for i in (1..5) %}{% render 'icon', name: 'star' %}{% endfor %}</div>
         <p>Add the Loox reviews block here: Customize, this section, Add block, Apps.</p>
