@@ -89,6 +89,17 @@ const Cart = {
     await this.refresh();
     return true;
   },
+  async addMany(ids){
+    const items = String(ids).split(',').filter(Boolean).map(id => ({ id:Number(id), quantity:1 }));
+    const res = await fetch(T.routes.cartAdd + '.js', {
+      method:'POST', headers:{ 'Content-Type':'application/json', Accept:'application/json' },
+      body: JSON.stringify({ items })
+    });
+    const data = await res.json();
+    if(!res.ok){ toast(data.description || data.message || 'Those could not be added. Please try again.'); return false; }
+    await this.refresh();
+    return true;
+  },
   async change(line, quantity){
     const res = await fetch(T.routes.cartChange + '.js', {
       method:'POST', headers:{ 'Content-Type':'application/json', Accept:'application/json' },
@@ -118,10 +129,10 @@ async function loadPair(){
     if(row){ box.innerHTML = `<p>${esc(box.dataset.pairTitle)}</p>` + row.outerHTML; box.hidden = false; }
   }catch(e){}
 }
-async function addWithButton(btn, id, qty){
+async function addWithButton(btn, id, qty, many){
   const label = $('.btn-t', btn);
   btn.classList.add('is-loading'); btn.setAttribute('aria-busy', 'true');
-  const ok = await Cart.add(id, qty);
+  const ok = many ? await Cart.addMany(id) : await Cart.add(id, qty);
   btn.classList.remove('is-loading'); btn.removeAttribute('aria-busy');
   if(!ok) return;
   if(label){ const old = label.textContent; btn.classList.add('is-done'); label.textContent = 'Added'; setTimeout(() => { btn.classList.remove('is-done'); label.textContent = old; }, 1400); }
@@ -315,7 +326,7 @@ async function loadMore(a){
 
 /* ---------- clicks ---------- */
 document.addEventListener('click', e => {
-  const t = e.target.closest('[data-open],[data-close],[data-scrim],[data-menu-scrim],[data-add],[data-qv],[data-qv-add],[data-line],[data-top],[data-sheet],[data-sheet-close],[data-sheet-scrim],[data-load-more]');
+  const t = e.target.closest('[data-open],[data-close],[data-scrim],[data-menu-scrim],[data-add],[data-add-many],[data-qv],[data-qv-add],[data-line],[data-top],[data-sheet],[data-sheet-close],[data-sheet-scrim],[data-load-more]');
   if(!t) return;
   if(t.matches('[data-open]')){ if(openLayer(t.dataset.open)) e.preventDefault(); return; }
   if(t.matches('[data-close],[data-scrim],[data-menu-scrim]')){ closeAll(); return; }
@@ -326,6 +337,7 @@ document.addEventListener('click', e => {
   if(t.matches('[data-qv]')){ e.preventDefault(); openQuickAdd(t.dataset.qv); return; }
   if(t.matches('[data-qv-add]')){ closeSheets(); addWithButton(t, t.dataset.qvAdd, 1); return; }
   if(t.matches('[data-add]')){ e.preventDefault(); addWithButton(t, t.dataset.add, 1); return; }
+  if(t.matches('[data-add-many]')){ e.preventDefault(); addWithButton(t, t.dataset.addMany, 1, true); return; }
   if(t.matches('[data-load-more]')){ e.preventDefault(); loadMore(t); return; }
 });
 document.addEventListener('keydown', e => { if(e.key === 'Escape'){ closeAll(); closeSheets(); } });

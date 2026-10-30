@@ -133,9 +133,89 @@
             "group": "mushrooms",
             "icon": "brain"
           }
+        },
+        "p-del": {
+          "type": "perk",
+          "settings": {
+            "icon": "truck",
+            "title": "Delivered in 3–5 days",
+            "text": "R120 flat rate, across South Africa"
+          }
+        },
+        "p-safe": {
+          "type": "perk",
+          "settings": {
+            "icon": "shield-check",
+            "title": "Safe checkout",
+            "text": "Card and EFT through Shopify"
+          }
+        },
+        "p-kiki": {
+          "type": "perk",
+          "settings": {
+            "icon": "leaf",
+            "title": "Chosen by Kiki",
+            "text": "Only what she uses herself"
+          }
+        },
+        "p-help": {
+          "type": "perk",
+          "settings": {
+            "icon": "whatsapp",
+            "title": "Questions?",
+            "text": "WhatsApp Kiki before you buy"
+          }
+        },
+        "bn-shift": {
+          "type": "banner",
+          "settings": {
+            "photo": "hero.webp",
+            "focus": "28% 30%",
+            "eyebrow": "With Kiki",
+            "heading": "Shift Consultation",
+            "text": "Sixty minutes on the bigger picture.",
+            "btn": "Find out more",
+            "special": "shift"
+          }
+        },
+        "bn-retreats": {
+          "type": "banner",
+          "settings": {
+            "photo": "hero.webp",
+            "focus": "62% 75%",
+            "eyebrow": "Come away",
+            "heading": "Retreats",
+            "text": "A few days to rest and reset.",
+            "btn": "See the dates",
+            "special": "retreats"
+          }
+        },
+        "bn-quiz": {
+          "type": "banner",
+          "settings": {
+            "photo": "group",
+            "group": "skincare-packages",
+            "eyebrow": "Not sure which one?",
+            "heading": "Take the skin quiz",
+            "text": "Find the routine that suits your skin.",
+            "btn": "Start the quiz",
+            "special": "quiz"
+          }
+        },
+        "bundle": {
+          "type": "bundle",
+          "settings": {
+            "from": "skincare",
+            "after": "skincare",
+            "count": 3
+          }
         }
       },
       "block_order": [
+        "p-del",
+        "p-safe",
+        "p-kiki",
+        "p-help",
         "n-all",
         "n-packs",
         "n-mush",
@@ -151,7 +231,11 @@
         "g-drinks",
         "g-eat",
         "g-supps",
-        "g-pets"
+        "g-pets",
+        "bn-shift",
+        "bn-retreats",
+        "bn-quiz",
+        "bundle"
       ],
       "settings": {}
     }

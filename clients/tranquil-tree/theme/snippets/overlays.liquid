@@ -5,6 +5,7 @@
   <div class="sheet-top"><h2 data-qv-title>Choose an option</h2><button class="icon-btn" type="button" data-sheet-close aria-label="Close">{% render 'icon', name: 'x' %}</button></div>
   <div class="sheet-body" data-qv-body></div>
 </div>
-{%- if settings.sticky_shop and template.name != 'product' and template.name != 'cart' -%}
+{%- assign no_fab = 'product,cart,collection,search,list-collections' | split: ',' -%}
+{%- if settings.sticky_shop and no_fab contains template.name -%}{%- else -%}{%- if settings.sticky_shop -%}
   <a class="btn btn-y fab" href="{{ routes.collections_url }}/all" data-fab>{% render 'icon', name: 'shopping-bag' %} Shop</a>
-{%- endif -%}
+{%- endif -%}{%- endif -%}

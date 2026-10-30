@@ -69,7 +69,7 @@
 
 <div class="toolbar">
   <div class="wrap">
-    <button class="btn btn-line tb-filter" type="button" data-sheet="filters-sheet">{% render 'icon', name: 'sliders-horizontal' %} Filter and sort</button>
+    <button class="btn btn-line tb-filter{% if collection.handle == 'all' and s.group_all %} always{% endif %}" type="button" data-sheet="filters-sheet">{% render 'icon', name: 'sliders-horizontal' %} Filter and sort</button>
     <span class="tb-count">{{ total }} {{ total | pluralize: 'product', 'products' }}</span>
     <label class="tb-sort"><span>Sort by</span><span class="select">
       <select data-sort-select aria-label="Sort by">
@@ -92,20 +92,20 @@
     {%- if active > 0 -%}<a class="chip clear" href="{{ collection.url }}?sort_by={{ sort_by }}">Clear all</a>{%- endif -%}
   </div>
 
-  <div class="shop-body">
-    {%- if collection.filters.size > 0 -%}
+  {%- liquid
+    assign groups = section.blocks | where: 'type', 'group'
+    assign grouped = false
+    if s.group_all and collection.handle == 'all' and active == 0 and groups.size > 0 and collection.sort_by == blank
+      assign grouped = true
+    endif
+  -%}
+  <div class="shop-body{% if grouped %} is-grouped{% endif %}">
+    {%- if collection.filters.size > 0 and grouped == false -%}
       <aside class="side" aria-label="Filters">
         <form data-filter-form>{{ filter_form }}<input type="hidden" name="sort_by" value="{{ sort_by }}"></form>
       </aside>
     {%- endif -%}
     <div>
-      {%- liquid
-        assign groups = section.blocks | where: 'type', 'group'
-        assign grouped = false
-        if s.group_all and collection.handle == 'all' and active == 0 and groups.size > 0 and collection.sort_by == blank
-          assign grouped = true
-        endif
-      -%}
       {%- if grouped -%}
         {%- comment -%}
           Shop-all page, grouped by kind. Each product goes into the first group
@@ -154,6 +154,59 @@
             endfor
             assign slots = map | split: ','
           -%}
+          {%- liquid
+            comment
+              first[i] = index of the first product in group i (for photos); counts for labels
+            endcomment
+            assign firsts = ''
+            assign counts = ''
+            for g in groups
+              assign gi = forloop.index0 | append: ''
+              assign f = ''
+              assign n = 0
+              for x in slots
+                if x == gi
+                  if f == ''
+                    assign f = forloop.index0
+                  endif
+                  assign n = n | plus: 1
+                endif
+              endfor
+              assign firsts = firsts | append: f | append: ','
+              assign counts = counts | append: n | append: ','
+            endfor
+            assign firsts = firsts | split: ','
+            assign counts = counts | split: ','
+            assign perks = section.blocks | where: 'type', 'perk'
+            assign banners = section.blocks | where: 'type', 'banner'
+            assign bundles = section.blocks | where: 'type', 'bundle'
+            assign banners_done = false
+          -%}
+
+          {%- if perks.size > 0 -%}
+            <ul class="perks">
+              {%- for b in perks -%}<li {{ b.shopify_attributes }}>{% render 'icon', name: b.settings.icon %}<div><b>{{ b.settings.title }}</b><span>{{ b.settings.text }}</span></div></li>{%- endfor -%}
+            </ul>
+          {%- endif -%}
+
+          {%- comment -%} Shop by category: one photo tile per group, using its first product's photo. {%- endcomment -%}
+          <div class="cat-tiles" aria-label="Shop by category">
+            {%- for g in groups -%}
+              {%- assign gi = forloop.index0 -%}
+              {%- assign fi = firsts[gi] -%}
+              {%- if fi == '' or fi == blank -%}{%- continue -%}{%- endif -%}
+              {%- assign fi = fi | plus: 0 -%}
+              <a class="cat-tile" href="#{{ g.settings.anchor | default: g.id }}">
+                {%- if g.settings.image != blank -%}
+                  {{ g.settings.image | image_url: width: 600 | image_tag: class: 'pi', widths: '300,450,600', sizes: '(min-width: 1024px) 200px, 44vw', loading: 'lazy', alt: '' }}
+                {%- else -%}
+                  {%- for p in collection.products offset: fi limit: 1 -%}{%- if p.featured_media -%}{{ p.featured_media.preview_image | image_url: width: 600 | image_tag: class: 'pi', widths: '300,450,600', sizes: '(min-width: 1024px) 200px, 44vw', loading: 'lazy', alt: '' }}{%- endif -%}{%- endfor -%}
+                {%- endif -%}
+                <span class="cat-label"><b>{{ g.settings.title }}</b><small>{{ counts[gi] }} {{ counts[gi] | plus: 0 | pluralize: 'product', 'products' }}</small><span class="cat-go">Shop now {% render 'icon', name: 'arrow-right' %}</span></span>
+              </a>
+            {%- endfor -%}
+          </div>
+
           <nav class="group-nav" aria-label="Jump to">
             {%- for g in groups -%}
               {%- assign gi = forloop.index0 | append: '' -%}
@@ -161,24 +214,123 @@
             {%- endfor -%}
             {%- if slots contains 'x' -%}<a href="#more">{{ s.rest_title }}</a>{%- endif -%}
           </nav>
+
+          {%- assign shown_groups = 0 -%}
           {%- for g in groups -%}
             {%- assign gi = forloop.index0 | append: '' -%}
             {%- unless slots contains gi -%}{%- continue -%}{%- endunless -%}
-            <section class="pgroup" id="{{ g.settings.anchor | default: g.id }}" {{ g.shopify_attributes }}>
-              <div class="pgroup-head"><h2 class="h2">{{ g.settings.title }}</h2>{%- if g.settings.intro != blank -%}<p class="lede">{{ g.settings.intro }}</p>{%- endif -%}</div>
-              <div class="shop-grid">
+            {%- assign shown_groups = shown_groups | plus: 1 -%}
+            {%- assign anchor = g.settings.anchor | default: g.id -%}
+            <section class="pgroup" id="{{ anchor }}" {{ g.shopify_attributes }}>
+              <div class="pgroup-head">
+                <h2 class="h2">{{ g.settings.title }}</h2>
+                <span class="pgroup-n">{{ counts[forloop.index0] }} {{ counts[forloop.index0] | plus: 0 | pluralize: 'product', 'products' }}</span>
+                {%- if g.settings.intro != blank -%}<p class="lede">{{ g.settings.intro }}</p>{%- endif -%}
+              </div>
+              <div class="shop-grid compact">
                 {%- for p in collection.products -%}
-                  {%- if slots[forloop.index0] == gi -%}{% render 'product-card', product: p, badge: true, meta: s.show_meta, sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw' %}{%- endif -%}
+                  {%- if slots[forloop.index0] == gi -%}{% render 'product-card', product: p, badge: true, does: false, sizes: '(min-width: 1024px) 18vw, (min-width: 768px) 30vw, 50vw' %}{%- endif -%}
                 {%- endfor -%}
               </div>
             </section>
+
+            {%- comment -%} "Build your routine": products joined with +, one button adds them all. {%- endcomment -%}
+            {%- for bb in bundles -%}
+              {%- if bb.settings.after != anchor -%}{%- continue -%}{%- endif -%}
+              {%- liquid
+                assign picks = bb.settings.products
+                if picks == blank or picks.size == 0
+                  assign src = ''
+                  for g2 in groups
+                    if g2.settings.anchor == bb.settings.from
+                      assign src = forloop.index0 | append: ''
+                    endif
+                  endfor
+                  assign idx = ''
+                  assign k = 0
+                  for x in slots
+                    if x == src and k < bb.settings.count
+                      assign idx = idx | append: forloop.index0 | append: ','
+                      assign k = k | plus: 1
+                    endif
+                  endfor
+                  assign idx = idx | split: ','
+                endif
+              -%}
+              {%- capture items -%}
+                {%- assign ids = '' -%}{%- assign sum = 0 -%}{%- assign shown = 0 -%}
+                {%- if picks != blank and picks.size > 0 -%}
+                  {%- for p in picks limit: 4 -%}
+                    {%- unless p.available -%}{%- continue -%}{%- endunless -%}
+                    {%- if shown > 0 -%}<span class="plus" aria-hidden="true">+</span>{%- endif -%}
+                    {%- assign v = p.selected_or_first_available_variant -%}
+                    <a class="b-item" href="{{ p.url }}">{% render 'product-media', product: p, sizes: '160px' %}<b>{{ p.title }}</b><span class="price">{{ v.price | money }}</span></a>
+                    {%- assign ids = ids | append: v.id | append: ',' -%}{%- assign sum = sum | plus: v.price -%}{%- assign shown = shown | plus: 1 -%}
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- for i in idx -%}
+                    {%- assign ii = i | plus: 0 -%}
+                    {%- for p in collection.products offset: ii limit: 1 -%}
+                      {%- unless p.available -%}{%- continue -%}{%- endunless -%}
+                      {%- if shown > 0 -%}<span class="plus" aria-hidden="true">+</span>{%- endif -%}
+                      {%- assign v = p.selected_or_first_available_variant -%}
+                      <a class="b-item" href="{{ p.url }}">{% render 'product-media', product: p, sizes: '160px' %}<b>{{ p.title }}</b><span class="price">{{ v.price | money }}</span></a>
+                      {%- assign ids = ids | append: v.id | append: ',' -%}{%- assign sum = sum | plus: v.price -%}{%- assign shown = shown | plus: 1 -%}
+                    {%- endfor -%}
+                  {%- endfor -%}
+                {%- endif -%}
+              {%- endcapture -%}
+              {%- if shown > 1 -%}
+                <section class="bundle" {{ bb.shopify_attributes }}>
+                  <div class="bundle-copy">
+                    {%- if bb.settings.eyebrow != blank -%}<p class="eyebrow">{{ bb.settings.eyebrow }}</p>{%- endif -%}
+                    <h2 class="h2">{{ bb.settings.heading }}</h2>
+                    {%- if bb.settings.text != blank -%}<p>{{ bb.settings.text }}</p>{%- endif -%}
+                    <p class="bundle-total"><span>Together</span> <b class="price">{{ sum | money }}</b></p>
+                    <button class="btn btn-ink" type="button" data-add-many="{{ ids | remove_last: ',' }}"><span class="btn-t">{{ bb.settings.btn }}</span></button>
+                  </div>
+                  <div class="bundle-items">{{ items }}</div>
+                </section>
+              {%- endif -%}
+            {%- endfor -%}
+
+            {%- comment -%} Three image banners, once, after the chosen number of groups. {%- endcomment -%}
+            {%- if banners.size > 0 and banners_done == false and shown_groups == s.banners_after -%}
+              {%- assign banners_done = true -%}
+              <div class="banners">
+                {%- for bn in banners limit: 3 -%}
+                  {%- assign b = bn.settings -%}
+                  <a class="banner" href="{% render 'href', url: b.link, fallback: b.special %}" {{ bn.shopify_attributes }}>
+                    {%- if b.image != blank -%}
+                      {{ b.image | image_url: width: 900 | image_tag: class: 'pi', widths: '400,600,900', sizes: '(min-width: 768px) 33vw, 90vw', loading: 'lazy', alt: '' }}
+                    {%- elsif b.photo == 'group' -%}
+                      {%- for g2 in groups -%}
+                        {%- if g2.settings.anchor == b.group -%}
+                          {%- assign fi = firsts[forloop.index0] -%}
+                          {%- if fi != '' and fi != blank -%}{%- assign fi = fi | plus: 0 -%}{%- for p in collection.products offset: fi limit: 1 -%}{%- if p.featured_media -%}{{ p.featured_media.preview_image | image_url: width: 900 | image_tag: class: 'pi', widths: '400,600,900', sizes: '(min-width: 768px) 33vw, 90vw', loading: 'lazy', alt: '' }}{%- endif -%}{%- endfor -%}{%- endif -%}
+                        {%- endif -%}
+                      {%- endfor -%}
+                    {%- else -%}
+                      <img class="pi" src="{{ b.photo | asset_url }}" alt="" loading="lazy" width="1200" height="900" style="object-position:{{ b.focus }}">
+                    {%- endif -%}
+                    <span class="banner-copy">
+                      {%- if b.eyebrow != blank -%}<small>{{ b.eyebrow }}</small>{%- endif -%}
+                      <b>{{ b.heading }}</b>
+                      {%- if b.text != blank -%}<span>{{ b.text }}</span>{%- endif -%}
+                      <span class="btn btn-w btn-add">{{ b.btn }} {% render 'icon', name: 'arrow-right' %}</span>
+                    </span>
+                  </a>
+                {%- endfor -%}
+              </div>
+            {%- endif -%}
           {%- endfor -%}
+
           {%- if slots contains 'x' -%}
             <section class="pgroup" id="more">
               <div class="pgroup-head"><h2 class="h2">{{ s.rest_title }}</h2></div>
-              <div class="shop-grid">
+              <div class="shop-grid compact">
                 {%- for p in collection.products -%}
-                  {%- if slots[forloop.index0] == 'x' -%}{% render 'product-card', product: p, badge: true, meta: s.show_meta, sizes: '(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw' %}{%- endif -%}
+                  {%- if slots[forloop.index0] == 'x' -%}{% render 'product-card', product: p, badge: true, does: false, sizes: '(min-width: 1024px) 18vw, (min-width: 768px) 30vw, 50vw' %}{%- endif -%}
                 {%- endfor -%}
               </div>
             </section>
@@ -260,6 +412,7 @@
     { "type": "header", "content": "Shop-all page groups" },
     { "type": "checkbox", "id": "group_all", "label": "Group the shop-all page by kind", "default": true, "info": "Uses the Group blocks below, in order. Sorting or filtering shows one plain grid." },
     { "type": "text", "id": "rest_title", "label": "Heading for products that fit no group", "default": "More from Kiki" },
+    { "type": "range", "id": "banners_after", "label": "Show the image banners after group", "min": 1, "max": 8, "step": 1, "default": 3 },
     { "type": "text", "id": "help_heading", "label": "Help box heading", "default": "Can't find what you're looking for?" },
     { "type": "textarea", "id": "help_text", "label": "Help box text", "default": "Send Kiki a message and she'll tell you which product fits, or book a Shift Consultation for the bigger picture." }
   ],
@@ -274,9 +427,45 @@
         { "value": "droplet", "label": "Drop" }, { "value": "brain", "label": "Brain" }, { "value": "heart", "label": "Heart" }, { "value": "leaf", "label": "Leaf" }
       ] }
     ] },
+    { "type": "perk", "name": "Perk (shop-all strip)", "settings": [
+      { "type": "select", "id": "icon", "label": "Icon", "default": "truck", "options": [
+        { "value": "truck", "label": "Truck" }, { "value": "shield-check", "label": "Shield" }, { "value": "whatsapp", "label": "WhatsApp" },
+        { "value": "star", "label": "Star" }, { "value": "leaf", "label": "Leaf" }, { "value": "repeat", "label": "Repeat" }, { "value": "heart", "label": "Heart" }
+      ] },
+      { "type": "text", "id": "title", "label": "Title", "default": "Perk" },
+      { "type": "text", "id": "text", "label": "Small line" }
+    ] },
+    { "type": "banner", "name": "Image banner (shop-all)", "settings": [
+      { "type": "image_picker", "id": "image", "label": "Photo" },
+      { "type": "select", "id": "photo", "label": "Photo while none is picked", "default": "hero.webp", "options": [
+        { "value": "hero.webp", "label": "Kiki with her products" }, { "value": "kiki.webp", "label": "Kiki close-up" }, { "value": "group", "label": "First product of a group" }
+      ] },
+      { "type": "text", "id": "group", "label": "Group anchor (for the photo)", "default": "skincare-packages" },
+      { "type": "text", "id": "focus", "label": "Photo focus", "default": "30% 30%" },
+      { "type": "text", "id": "eyebrow", "label": "Small line" },
+      { "type": "text", "id": "heading", "label": "Heading", "default": "Banner" },
+      { "type": "text", "id": "text", "label": "Text" },
+      { "type": "text", "id": "btn", "label": "Button", "default": "Explore" },
+      { "type": "url", "id": "link", "label": "Link" },
+      { "type": "select", "id": "special", "label": "If the link is empty, go to", "default": "shift", "options": [
+        { "value": "shift", "label": "Shift Consultation page" }, { "value": "retreats", "label": "Retreats page" },
+        { "value": "quiz", "label": "Skin quiz" }, { "value": "whatsapp", "label": "WhatsApp" }, { "value": "bestsellers", "label": "Best-sellers" }
+      ] }
+    ] },
+    { "type": "bundle", "name": "Build-a-routine bundle", "settings": [
+      { "type": "text", "id": "eyebrow", "label": "Small line", "default": "Kiki's routine" },
+      { "type": "text", "id": "heading", "label": "Heading", "default": "Build your routine" },
+      { "type": "textarea", "id": "text", "label": "Text", "default": "The products that work best together, added in one tap." },
+      { "type": "product_list", "id": "products", "label": "Products", "limit": 4, "info": "Empty picks the first products of the group below." },
+      { "type": "text", "id": "from", "label": "Or pick from this group (anchor)", "default": "skincare" },
+      { "type": "range", "id": "count", "label": "How many", "min": 2, "max": 4, "step": 1, "default": 3 },
+      { "type": "text", "id": "after", "label": "Show after this group (anchor)", "default": "skincare" },
+      { "type": "text", "id": "btn", "label": "Button", "default": "Add the routine to cart" }
+    ] },
     { "type": "group", "name": "Group (shop-all page)", "settings": [
       { "type": "text", "id": "title", "label": "Heading", "default": "Group" },
       { "type": "text", "id": "anchor", "label": "Anchor name", "info": "Links elsewhere jump here with /collections/all#name." },
+      { "type": "image_picker", "id": "image", "label": "Category tile photo", "info": "Empty uses the group's first product photo." },
       { "type": "textarea", "id": "intro", "label": "Short line" },
       { "type": "textarea", "id": "words", "label": "Words that put a product here", "info": "Separated by commas. Checked against the product name first, then the product type. A product goes into the first group it matches." }
     ] },
