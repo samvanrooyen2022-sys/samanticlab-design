@@ -236,6 +236,33 @@ function initRails(root = document){
   });
 }
 
+/* ---------- live feeds: best-sellers rows and tile photos ---------- */
+// Rows with no collection picked load her best-sellers (Shopify's sales order);
+// tiles with no photo borrow the photo of the first product their search finds.
+const fetchDoc = async url => new DOMParser().parseFromString(await (await fetch(url)).text(), 'text/html');
+function initFeeds(root = document){
+  $$('[data-feed-src]', root).forEach(async box => {
+    if(box.dataset.loaded) return; box.dataset.loaded = 1;
+    try{
+      const feed = $('[data-feed]', await fetchDoc(box.dataset.feedSrc)); if(!feed || !feed.children.length) return;
+      const limit = Number(box.dataset.feedLimit) || 12;
+      box.innerHTML = [...feed.children].slice(0, limit).map(c => c.outerHTML).join('');
+      if(box.hasAttribute('data-rail')){ delete box.dataset.ready; initRails(box.parentElement); }
+      initReveal(box);
+    }catch(e){}
+  });
+  $$('[data-thumb-src]', root).forEach(async ph => {
+    if(ph.dataset.loaded) return; ph.dataset.loaded = 1;
+    try{
+      const t = $('[data-thumb]', await fetchDoc(ph.dataset.thumbSrc));
+      if(t){ ph.innerHTML = t.innerHTML; ph.classList.add('has-img'); }
+    }catch(e){}
+  });
+  // search page opened from a tile or menu: show the tile's name as the heading
+  const st = $('[data-search-title]'), title = new URLSearchParams(location.search).get('title');
+  if(st && title && !st.dataset.set){ st.dataset.set = 1; st.textContent = title; document.title = title + ' – ' + document.title.split(' – ').pop(); const f = $('.shop-find input[name="q"]'); if(f) f.value = ''; }
+}
+
 /* ---------- predictive search ---------- */
 function initSearch(){
   const input = $('[data-search-input]'), out = $('[data-search-results]');
@@ -406,7 +433,7 @@ function initHeroPointer(){
 function init(root = document){
   if(reduce) document.documentElement.classList.add('still');
   collect();
-  initWords(root); initReveal(root); initRails(root); initProduct(root); initCollection(root); initSearch();
+  initWords(root); initReveal(root); initRails(root); initFeeds(root); initProduct(root); initCollection(root); initSearch();
   initHeroPointer(); syncCols(); sizeTravel(); frame();
   loadPair();
 }

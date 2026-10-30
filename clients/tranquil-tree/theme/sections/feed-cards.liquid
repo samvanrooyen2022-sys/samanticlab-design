@@ -1,0 +1,9 @@
+{%- comment -%}
+  Fetched by theme.js from /collections/all?sort_by=best-selling, so it lists
+  her real best-sellers in Shopify's own sales order. Not placed on any page.
+{%- endcomment -%}
+<div data-feed>
+  {%- for p in collection.products limit: 12 -%}
+    {% render 'product-card', product: p, sizes: '(min-width: 1024px) 16vw, (min-width: 768px) 40vw, 68vw' %}
+  {%- endfor -%}
+</div>

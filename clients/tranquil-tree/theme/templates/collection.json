@@ -3,19 +3,96 @@
     "main": {
       "type": "main-collection",
       "blocks": {
-        "n-all": { "type": "need", "settings": { "collection": "all", "title": "Everything", "icon": "layout-grid" } },
-        "n-best": { "type": "need", "settings": { "collection": "bestsellers", "icon": "star" } },
-        "n-energy": { "type": "need", "settings": { "collection": "energy", "icon": "zap" } },
-        "n-body": { "type": "need", "settings": { "collection": "body", "icon": "activity" } },
-        "n-skin": { "type": "need", "settings": { "collection": "skin", "icon": "droplet" } },
-        "n-mindset": { "type": "need", "settings": { "collection": "mindset", "icon": "brain" } },
-        "n-family": { "type": "need", "settings": { "collection": "family", "icon": "heart" } },
-        "n-pets": { "type": "need", "settings": { "collection": "pets", "icon": "leaf" } },
-        "promo": { "type": "promo", "settings": {} }
+        "n-all": {
+          "type": "need",
+          "settings": {
+            "collection": "all",
+            "title": "Everything",
+            "icon": "layout-grid"
+          }
+        },
+        "n-best": {
+          "type": "need",
+          "settings": {
+            "collection": "bestsellers",
+            "icon": "star",
+            "title": "Bestsellers"
+          }
+        },
+        "n-energy": {
+          "type": "need",
+          "settings": {
+            "collection": "energy",
+            "icon": "zap",
+            "search": "creatine OR bcaa OR protein OR recovery OR bar OR sport",
+            "title": "Energy"
+          }
+        },
+        "n-body": {
+          "type": "need",
+          "settings": {
+            "collection": "body",
+            "icon": "activity",
+            "search": "collagen OR superfood OR oat OR plant",
+            "title": "Body"
+          }
+        },
+        "n-skin": {
+          "type": "need",
+          "settings": {
+            "collection": "skin",
+            "icon": "droplet",
+            "search": "serum OR cleanser OR moisturiser OR derma OR skin",
+            "title": "Skin"
+          }
+        },
+        "n-mindset": {
+          "type": "need",
+          "settings": {
+            "collection": "mindset",
+            "icon": "brain",
+            "search": "mushrooms OR shrooms",
+            "title": "Mindset"
+          }
+        },
+        "n-family": {
+          "type": "need",
+          "settings": {
+            "collection": "family",
+            "icon": "heart",
+            "search": "kids OR family OR children",
+            "title": "Family and kids"
+          }
+        },
+        "n-pets": {
+          "type": "need",
+          "settings": {
+            "collection": "pets",
+            "icon": "leaf",
+            "search": "pet OR pets",
+            "title": "Pets"
+          }
+        },
+        "promo": {
+          "type": "promo",
+          "settings": {}
+        }
       },
-      "block_order": ["n-all","n-best","n-energy","n-body","n-skin","n-mindset","n-family","n-pets","promo"],
+      "block_order": [
+        "n-all",
+        "n-best",
+        "n-energy",
+        "n-body",
+        "n-skin",
+        "n-mindset",
+        "n-family",
+        "n-pets",
+        "promo"
+      ],
       "settings": {}
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

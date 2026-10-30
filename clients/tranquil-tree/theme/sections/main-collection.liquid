@@ -46,12 +46,20 @@
     <nav class="needs" aria-label="Shop by what you need">
       {%- for block in needs -%}
         {%- assign c = block.settings.collection -%}
-        {%- if c == blank -%}{%- continue -%}{%- endif -%}
-        <a class="need" href="{{ c.url }}"{% if c.handle == collection.handle %} aria-current="true"{% endif %} {{ block.shopify_attributes }}>
-          <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
-          <b>{{ block.settings.title | default: c.title }}</b>
-          <small>{% if c.products_count > 0 %}{{ c.products_count }} {{ c.products_count | pluralize: 'product', 'products' }}{% else %}Coming soon{% endif %}</small>
-        </a>
+        {%- if c == blank and block.settings.search == blank -%}{%- continue -%}{%- endif -%}
+        {%- if c != blank -%}
+          <a class="need" href="{{ c.url }}"{% if c.handle == collection.handle %} aria-current="true"{% endif %} {{ block.shopify_attributes }}>
+            <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
+            <b>{{ block.settings.title | default: c.title }}</b>
+            <small>{% if c.products_count > 0 %}{{ c.products_count }} {{ c.products_count | pluralize: 'product', 'products' }}{% else %}Coming soon{% endif %}</small>
+          </a>
+        {%- else -%}
+          <a class="need" href="{% render 'search-url', q: block.settings.search, title: block.settings.title %}" {{ block.shopify_attributes }}>
+            <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
+            <b>{{ block.settings.title }}</b>
+            <small>See products</small>
+          </a>
+        {%- endif -%}
       {%- endfor -%}
     </nav>
   {%- endif -%}
@@ -166,6 +174,7 @@
   "blocks": [
     { "type": "need", "name": "Collection button", "settings": [
       { "type": "collection", "id": "collection", "label": "Collection" },
+      { "type": "text", "id": "search", "label": "Search words when there's no collection", "info": "Use OR between words." },
       { "type": "text", "id": "title", "label": "Title", "info": "Empty uses the collection name." },
       { "type": "select", "id": "icon", "label": "Icon", "default": "leaf", "options": [
         { "value": "layout-grid", "label": "Grid" }, { "value": "star", "label": "Star" }, { "value": "zap", "label": "Bolt" }, { "value": "activity", "label": "Pulse" },

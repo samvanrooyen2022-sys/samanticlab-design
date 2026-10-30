@@ -1,0 +1,10 @@
+{%- comment -%}
+  Link to a product search, used when a collection doesn't exist yet.
+  Usage: {% render 'search-url', q: 'collagen OR protein', title: 'Body' %}
+  The title shows as the heading on the search page.
+{%- endcomment -%}
+{%- liquid
+  assign qq = q | url_encode
+  assign tt = title | url_encode
+  echo routes.search_url | append: '?type=product&q=' | append: qq | append: '&title=' | append: tt
+-%}

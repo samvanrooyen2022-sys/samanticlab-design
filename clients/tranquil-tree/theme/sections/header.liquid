@@ -58,10 +58,11 @@
           {%- for block in section.blocks -%}
             {%- if block.type == 'menu_collection' -%}
               {%- assign c = block.settings.collection -%}
-              <a class="m-coll" href="{{ c.url | default: '#' }}" {{ block.shopify_attributes }}>
+              {%- capture mc_url -%}{%- if c != blank -%}{{ c.url }}{%- elsif block.settings.search != blank -%}{% render 'search-url', q: block.settings.search, title: block.settings.title %}{%- else -%}#{%- endif -%}{%- endcapture -%}
+              <a class="m-coll" href="{{ mc_url }}" {{ block.shopify_attributes }}>
                 <span class="ico">{% render 'icon', name: block.settings.icon %}</span>
                 <span><b>{{ block.settings.title | default: c.title | default: 'Pick a collection' }}</b><small>{{ block.settings.sub }}</small></span>
-                {%- if c != blank -%}<span class="n">{% if c.products_count > 0 %}{{ c.products_count }}{% else %}Soon{% endif %}</span>{%- endif -%}
+                {%- if c != blank -%}<span class="n">{% if c.products_count > 0 %}{{ c.products_count }}{% else %}Soon{% endif %}</span>{%- else -%}<span class="n">{% render 'icon', name: 'arrow-right' %}</span>{%- endif -%}
               </a>
             {%- endif -%}
           {%- endfor -%}
@@ -69,7 +70,12 @@
       </nav>
 
       {%- assign best = section.settings.menu_best -%}
-      {%- if best != blank and best.products_count > 0 -%}
+      {%- if best == blank -%}
+        <div class="m-best-wrap m-item" style="--i:3">
+          <div class="m-h"><span>{{ section.settings.best_heading }}</span><a href="{% render 'href', fallback: 'bestsellers' %}">See all {% render 'icon', name: 'arrow-right' %}</a></div>
+          <div class="m-rail" data-feed-src="{{ routes.all_products_collection_url }}?sort_by=best-selling&section_id=feed-mini" data-feed-limit="4"></div>
+        </div>
+      {%- elsif best.products_count > 0 -%}
         <div class="m-best-wrap m-item" style="--i:3">
           <div class="m-h"><span>{{ section.settings.best_heading | default: best.title }}</span><a href="{{ best.url }}">See all {% render 'icon', name: 'arrow-right' %}</a></div>
           <div class="m-rail">
@@ -161,7 +167,7 @@
     { "type": "header", "content": "Menu" },
     { "type": "text", "id": "all_label", "label": "Shop-all button", "default": "Shop all products" },
     { "type": "text", "id": "colls_heading", "label": "Collections heading", "default": "Shop by what you need" },
-    { "type": "collection", "id": "menu_best", "label": "Bestsellers collection" },
+    { "type": "collection", "id": "menu_best", "label": "Bestsellers collection", "info": "Empty shows her four best-sellers in Shopify's sales order." },
     { "type": "text", "id": "best_heading", "label": "Bestsellers heading", "default": "Bestsellers" },
     { "type": "product", "id": "menu_pick", "label": "This week's product" },
     { "type": "text", "id": "pick_heading", "label": "Pick heading", "default": "This week from Kiki" },
@@ -194,6 +200,7 @@
       "name": "Menu collection",
       "settings": [
         { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "text", "id": "search", "label": "Search words when there's no collection", "info": "Use OR between words, e.g. mushrooms OR shrooms." },
         { "type": "text", "id": "title", "label": "Title", "info": "Leave empty to use the collection name." },
         { "type": "text", "id": "sub", "label": "Small line" },
         { "type": "select", "id": "icon", "label": "Icon", "default": "leaf", "options": [

@@ -20,7 +20,7 @@
     when 'account'
       echo routes.account_url
     when 'bestsellers'
-      echo routes.collections_url | append: '/bestsellers'
+      echo routes.all_products_collection_url | append: '?sort_by=best-selling'
     when 'whatsapp'
       echo 'https://wa.me/' | append: settings.whatsapp
       if text != blank

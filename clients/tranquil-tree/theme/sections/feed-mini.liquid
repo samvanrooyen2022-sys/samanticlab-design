@@ -1,0 +1,9 @@
+{%- comment -%} Fetched by theme.js for the menu's bestsellers (best-selling order). Not placed on any page. {%- endcomment -%}
+<div data-feed>
+  {%- for p in collection.products limit: 4 -%}
+    <div class="m-prod">
+      <a href="{{ p.url }}">{% render 'product-media', product: p, sizes: '160px' %}<b>{{ p.title }}</b></a>
+      <div class="row">{% render 'price', product: p %}{% render 'buy-button', product: p, class: 'add', icon_only: true %}</div>
+    </div>
+  {%- endfor -%}
+</div>

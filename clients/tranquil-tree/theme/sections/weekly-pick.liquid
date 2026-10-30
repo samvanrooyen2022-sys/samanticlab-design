@@ -3,6 +3,7 @@
   assign s = section.settings
   assign p = s.product
 -%}
+{%- if p == blank and request.design_mode == false -%}{%- comment -%} Hidden on the shop until Kiki picks a product. {%- endcomment -%}{%- else -%}
 <section class="sec week-band" aria-labelledby="h-{{ section.id }}">
   <div class="wrap week">
     <a class="week-media" href="{{ p.url | default: '#' }}" aria-label="{{ p.title | default: 'This week' | escape }}">
@@ -35,6 +36,7 @@
     </div>
   </div>
 </section>
+{%- endif -%}
 
 {% schema %}
 {

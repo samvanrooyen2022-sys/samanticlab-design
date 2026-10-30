@@ -1,0 +1,7 @@
+{%- comment -%} Fetched by theme.js: the photo of the first product a search finds, for tiles without their own photo. {%- endcomment -%}
+{%- for item in search.results -%}
+  {%- if item.object_type == 'product' and item.featured_media -%}
+    <div data-thumb>{{ item.featured_media.preview_image | image_url: width: 900 | image_tag: class: 'pi', widths: '400,600,900', sizes: '(min-width: 768px) 400px, 78vw', loading: 'lazy', alt: '' }}</div>
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}

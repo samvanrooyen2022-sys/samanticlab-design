@@ -1,6 +1,6 @@
 <div class="wrap">
   <div class="shop-top">
-    <h1 class="sig">{% if search.performed %}Results for "{{ search.terms | escape }}"{% else %}Search{% endif %}</h1>
+    <h1 class="sig" data-search-title>{% if search.performed %}Results for "{{ search.terms | escape }}"{% else %}Search{% endif %}</h1>
     <form class="shop-find" action="{{ routes.search_url }}" method="get" role="search">
       {% render 'icon', name: 'search' %}
       <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search all products" aria-label="Search">
